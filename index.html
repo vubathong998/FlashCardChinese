@@ -11,35 +11,30 @@
 
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-purple-600 via-indigo-500 to-green-500 flex justify-center p-6">
-
+<body class="soft-bg-page min-h-screen flex justify-center p-6">
     <div class="w-full max-w-5xl">
-
         <!-- HEADER -->
-        <header class="mb-6 rounded-2xl px-6 py-4
-      bg-gradient-to-r from-purple-400 via-indigo-400 to-slate-400
-      shadow-md flex items-center justify-between gap-4">
-
+        <header class="mb-6 rounded-2xl px-6 py-4 border gray-500 flex items-center justify-between gap-4">
             <!-- Left buttons -->
             <div class="flex gap-3 flex-wrap">
                 <button
-                    class="header_btn-chinese px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-purple-100">中文
+                    class="header_btn-chinese px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">中文
                     1</button>
                 <button
-                    class="header_btn-vietnamese px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-purple-100">越南文
+                    class="header_btn-vietnamese px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">越南文
                     1</button>
                 <button
-                    class="header_btn-english px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-purple-100">英文
+                    class="header_btn-english px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">英文
                     1</button>
                 <button
-                    class="header_btn-pinin px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-purple-100">Pinyin
+                    class="header_btn-pinin px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">Pinyin
                     1</button>
             </div>
 
             <!-- Right controls -->
             <div class="flex gap-3 items-center">
                 <select
-                    class="header_btn-point px-4 py-2 bg-white rounded-xl shadow text-sm font-semibold outline-none cursor-pointer">
+                    class="header_btn-point px-4 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold outline-none cursor-pointer">
                     <option value="0">All</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -82,12 +77,12 @@
         <main class="space-y-4 max-w-4xl mx-auto">
 
             <!-- Chinese -->
-            <div class="bg-white rounded-2xl shadow-md py-6 text-center">
+            <div class="soft-bg-animate bg-white  rounded-2xl border gray-300 py-6 text-center">
                 <span class="body_block-chinese text-2xl font-semibold text-gray-700">中国</span>
             </div>
 
             <!-- Vietnamese -->
-            <div class="relative bg-white rounded-2xl shadow-md py-4 px-6 text-center">
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
                 <span class="body_block-vietnamese text-base italic text-gray-600" is-show="false"
                     data-vietnamese="">Tiếng
                     Việt</span>
@@ -114,7 +109,8 @@
             </div>
 
             <!-- Pinyin -->
-            <div class="relative bg-white rounded-2xl shadow-md py-4 px-6 text-center" is-show="false" data-pinin="">
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center"
+                is-show="false" data-pinin="">
                 <span class="body_block-pinin text-base italic text-gray-600">Pinyin</span>
 
                 <!-- Eye icons -->
@@ -139,7 +135,7 @@
             </div>
 
             <!-- English -->
-            <div class="relative bg-white rounded-2xl shadow-md py-4 px-6 text-center">
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
                 <span class="body_block-english text-base italic text-gray-600" is-show="false"
                     data-english="">English</span>
                 <!-- Eye icons -->
@@ -163,12 +159,33 @@
                 </div>
             </div>
             <!-- English -->
-            <div class="relative bg-white rounded-2xl shadow-md py-4 px-6 text-center">
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
                 <span class="body_block-example text-base italic text-gray-600" is-show="false"
                     data-english="">example</span>
                 <!-- Eye icons -->
             </div>
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
+                <div class="w-full max-w-3xl px-4 space-y-4">
 
+                    <!-- Textarea giống card -->
+                    <div class="bg-white rounded-2xl shadow-sm h-24 flex items-center justify-center">
+                        <textarea class="
+                            typing-place
+                            w-full h-full
+                            resize-none
+                            bg-transparent
+                            text-center
+                            text-2xl
+                            font-medium
+                            pl-[70px]
+                            outline-none
+                            flex items-center justify-center
+                            placeholder-gray-400
+                            "></textarea>
+                    </div>
+
+                </div>
+            </div>
         </main>
     </div>
 

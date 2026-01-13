@@ -1,3 +1,35 @@
-* {
-    user-select: none;
+.soft-bg-page {
+    /* animation: pageColorChange 100s infinite alternate; */
+    background-color: #eef7ff;
+}
+
+@keyframes pageColorChange {
+    0% {
+        background-color: #7bbdff;
+        /* xám trắng */
+    }
+
+    20% {
+        background-color: #7bbdff;
+        /* tím nhạt */
+    }
+
+    40% {
+        background-color: #7bbdff;
+        /* xanh lam nhạt */
+    }
+
+    60% {
+        background-color: #7bbdff;
+        /* xanh lá nhạt */
+    }
+
+    80% {
+        background-color: #7bbdff;
+        /* cam nhạt */
+    }
+
+    100% {
+        background-color: #7bbdff;
+    }
 }
