@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Language UI</title>
+
+    <link rel="stylesheet" href="assets/index.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-purple-600 via-indigo-500 to-green-500 flex justify-center p-6">
+
+    <div class="w-full max-w-5xl">
+
+        <!-- HEADER -->
+        <header class="mb-6 rounded-2xl px-6 py-4
+      bg-gradient-to-r from-purple-400 via-indigo-400 to-slate-400
+      shadow-md flex items-center justify-between gap-4">
+
+            <!-- Left buttons -->
+            <div class="flex gap-3 flex-wrap">
+                <button
+                    class="header_btn-chinese px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-purple-100">中文
+                    1</button>
+                <button
+                    class="header_btn-vietnamese px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-purple-100">越南文
+                    1</button>
+                <button
+                    class="header_btn-english px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-purple-100">英文
+                    1</button>
+                <button
+                    class="header_btn-pinin px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-purple-100">Pinyin
+                    1</button>
+            </div>
+
+            <!-- Right controls -->
+            <div class="flex gap-3 items-center">
+                <select
+                    class="header_btn-point px-4 py-2 bg-white rounded-xl shadow text-sm font-semibold outline-none cursor-pointer">
+                    <option value="0">All</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+                <select
+                    class="header_btn-type px-4 py-2 bg-white rounded-xl shadow text-sm font-semibold outline-none cursor-pointer">
+                    <option value="0">All</option>
+                    <option value="1">H</option>
+                    <option value="2">Major</option>
+                    <option value="3">Other</option>
+                </select>
+
+                <button class="header_btn-random flex items-center gap-2 px-5 py-2 bg-white rounded-xl shadow
+         text-sm font-semibold hover:bg-green-100 active:scale-95
+         transition">
+
+                    <!-- Icon Random / Shuffle -->
+                    <svg class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 3h5v5" />
+                        <path d="M4 20l5-5" />
+                        <path d="M4 4l7 7" />
+                        <path d="M14 14l7 7" />
+                        <path d="M21 16v5h-5" />
+                    </svg>
+
+                    <span>Random</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- BODY -->
+        <main class="space-y-4 max-w-4xl mx-auto">
+
+            <!-- Chinese -->
+            <div class="bg-white rounded-2xl shadow-md py-6 text-center">
+                <span class="body_block-chinese text-2xl font-semibold text-gray-700">中国</span>
+            </div>
+
+            <!-- Vietnamese -->
+            <div class="relative bg-white rounded-2xl shadow-md py-4 px-6 text-center">
+                <span class="body_block-vietnamese text-base italic text-gray-600" is-show="false"
+                    data-vietnamese="">Tiếng
+                    Việt</span>
+
+                <!-- Eye icons -->
+                <div class="hide_second absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
+                    <!-- Eye -->
+                    <svg class="w-8 h-8 text-gray-500 hidden" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+
+                    <!-- Eye off -->
+                    <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M3 3l18 18" />
+                        <path d="M10.58 10.58A3 3 0 0012 15a3 3 0 002.42-4.42" />
+                        <path
+                            d="M9.88 4.24A10.94 10.94 0 0112 4.5c6.5 0 10.5 7.5 10.5 7.5a19.28 19.28 0 01-4.32 5.06" />
+                        <path d="M6.53 6.53A19.28 19.28 0 001.5 12s4 7.5 10.5 7.5a10.94 10.94 0 004.47-.94" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Pinyin -->
+            <div class="relative bg-white rounded-2xl shadow-md py-4 px-6 text-center" is-show="false" data-pinin="">
+                <span class="body_block-pinin text-base italic text-gray-600">Pinyin</span>
+
+                <!-- Eye icons -->
+                <div class="hide_third absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
+                    <!-- Eye -->
+                    <svg class="w-8 h-8 text-gray-500 hidden" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+
+                    <!-- Eye off -->
+                    <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M3 3l18 18" />
+                        <path d="M10.58 10.58A3 3 0 0012 15a3 3 0 002.42-4.42" />
+                        <path
+                            d="M9.88 4.24A10.94 10.94 0 0112 4.5c6.5 0 10.5 7.5 10.5 7.5a19.28 19.28 0 01-4.32 5.06" />
+                        <path d="M6.53 6.53A19.28 19.28 0 001.5 12s4 7.5 10.5 7.5a10.94 10.94 0 004.47-.94" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- English -->
+            <div class="relative bg-white rounded-2xl shadow-md py-4 px-6 text-center">
+                <span class="body_block-english text-base italic text-gray-600" is-show="false"
+                    data-english="">English</span>
+                <!-- Eye icons -->
+                <div class="hide_fourth absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
+                    <!-- Eye -->
+                    <svg class="w-8 h-8 text-gray-500 hidden" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+
+                    <!-- Eye off -->
+                    <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path d="M3 3l18 18" />
+                        <path d="M10.58 10.58A3 3 0 0012 15a3 3 0 002.42-4.42" />
+                        <path
+                            d="M9.88 4.24A10.94 10.94 0 0112 4.5c6.5 0 10.5 7.5 10.5 7.5a19.28 19.28 0 01-4.32 5.06" />
+                        <path d="M6.53 6.53A19.28 19.28 0 001.5 12s4 7.5 10.5 7.5a10.94 10.94 0 004.47-.94" />
+                    </svg>
+                </div>
+            </div>
+            <!-- English -->
+            <div class="relative bg-white rounded-2xl shadow-md py-4 px-6 text-center">
+                <span class="body_block-example text-base italic text-gray-600" is-show="false"
+                    data-english="">example</span>
+                <!-- Eye icons -->
+            </div>
+
+        </main>
+    </div>
+
+    <script src="assets/index.js"></script>
+
+</body>
+
+</html>
