@@ -87,7 +87,7 @@ function main() {
 
         document.addEventListener("keydown", function (event) {
             if (event.code === "Space" || event.code === 'ArrowRight') {
-                event.preventDefault(); // chặn scroll trang nếu cần
+                event.preventDefault();
                 randomAction();
             }
             else if (event.code === 'NumpadEnter' || event.code === 'ControlLeft') {
@@ -95,9 +95,17 @@ function main() {
                 showPininAction();
             }
             else if (event.code === 'Numpad0' || event.code === 'KeyF') {
+                event.preventDefault();
                 showVietnameseAction();
             }
             else if (event.code === 'NumpadAdd' || event.code === 'ShiftLeft') {
+                event.preventDefault();
+                showEnglishAction();
+            }
+            else if(event.code === 'Escape') {
+                event.preventDefault();
+                showPininAction();
+                showVietnameseAction();
                 showEnglishAction();
             }
         });
