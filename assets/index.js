@@ -31,7 +31,11 @@ function main() {
                 .map(row => row.split(','));
             // Nếu muốn bỏ header
             const [header, ...data] = rows;
+            return data;
+        })
+        .then(data => {
             handle(data);
+
         })
         .catch(err => console.error('Sheet error:', err));
 
@@ -54,222 +58,30 @@ function main() {
 
     //main function
     function handle(data) {
-        data = data.slice(1)
-        const dataLength = data.length;
-        let dataMapped = [];
+        let dataMapped = mapper(data);
+        
 
-        for (let i = 0; i < dataLength; i++) {
-            if (data[i][2]) {
+        console.log(dataMapped);
+
+
+        function mapper(dataMapper) {
+            let dataMapped = [];
+            for (let i = 0; i < dataMapper.length; i++) {
                 dataMapped.push({
-                    id: data[i][0],
-                    point: data[i][1],
-                    chinese: data[i][2],
-                    classifier: data[i][3],
-                    pinin: data[i][4],
-                    classPinin: data[i][5],
-                    english: data[i][6],
-                    vietnamese: data[i][7],
-                    // type: data[i][8],
-                    example: data[i][9],
-                    from: data[i][10],
-                    type: data[i][11],
+                    id: dataMapper[i][0],
+                    point: dataMapper[i][1],
+                    chinese: dataMapper[i][2],
+                    classifier: dataMapper[i][3],
+                    pinin: dataMapper[i][4],
+                    classPinin: dataMapper[i][5],
+                    english: dataMapper[i][6],
+                    vietnamese: dataMapper[i][7],
+                    example: dataMapper[i][8],
+                    from: dataMapper[i][9],
+                    type: dataMapper[i][10],
                 })
             }
-        }
-        typingPlace.addEventListener('input', (e) => {
-            e.preventDefault();
-        })
-
-        let dataMappedlength = dataMapped.length;
-        btnRandom.addEventListener('click', () => {
-            randomAction();
-        })
-
-        document.addEventListener("keydown", function (event) {
-            if (event.code === "Space" || event.code === 'ArrowRight') {
-                event.preventDefault();
-                randomAction();
-            }
-            else if (event.code === 'NumpadEnter' || event.code === 'ControlLeft') {
-                event.preventDefault();
-                showPininAction();
-            }
-            else if (event.code === 'Numpad0' || event.code === 'KeyF') {
-                event.preventDefault();
-                showVietnameseAction();
-            }
-            else if (event.code === 'NumpadAdd' || event.code === 'ShiftLeft') {
-                event.preventDefault();
-                showEnglishAction();
-            }
-            else if(event.code === 'Escape') {
-                event.preventDefault();
-                showPininAction();
-                showVietnameseAction();
-                showEnglishAction();
-            }
-        });
-
-
-        function randomAction() {
-            if (dataMappedlength) {
-                const random = randomNumber(dataMappedlength);
-                reloadPage(random);
-            }
-        }
-
-        showSecond.addEventListener('click', () => {
-            showVietnameseAction();
-        })
-
-        function showVietnameseAction() {
-            const isShow = blockVietnamese.getAttribute('is-show') === 'true' ? true : false;
-            const dataVietnamese = blockVietnamese.getAttribute('data-vietnamese');
-            if (isShow) {
-                blockVietnamese.setAttribute('is-show', false);
-                blockVietnamese.textContent = '*****';
-            }
-            else {
-                blockVietnamese.setAttribute('is-show', true);
-                if (dataVietnamese) {
-                    blockVietnamese.textContent = dataVietnamese;
-                }
-                else {
-                    blockVietnamese.textContent = '*****';
-                }
-            }
-        }
-
-
-        showthird.addEventListener('click', () => {
-            showPininAction();
-        })
-
-        function showPininAction() {
-            const isShow = blockPinin.getAttribute('is-show') === 'true' ? true : false;
-
-            const dataVietnamese = blockPinin.getAttribute('data-pinin');
-            if (isShow) {
-                blockPinin.setAttribute('is-show', false);
-                blockPinin.textContent = '*****';
-            }
-            else {
-                blockPinin.setAttribute('is-show', true);
-                if (dataVietnamese) {
-                    blockPinin.textContent = dataVietnamese;
-                }
-                else {
-                    blockPinin.textContent = '*****';
-                }
-            }
-        }
-
-        btnType.addEventListener('change', (d) => {
-            const value = d.target.value;
-            filter.type = value;
-
-        })
-
-        showfourth.addEventListener('click', () => {
-            showEnglishAction();
-        })
-
-        function showEnglishAction() {
-            const isShow = blockEnglish.getAttribute('is-show') === 'true' ? true : false;
-            const dataVietnamese = blockEnglish.getAttribute('data-english');
-            if (isShow) {
-                blockEnglish.setAttribute('is-show', false);
-                blockEnglish.textContent = '*****';
-            }
-            else {
-                blockEnglish.setAttribute('is-show', true);
-                if (dataVietnamese) {
-                    blockEnglish.textContent = dataVietnamese;
-                }
-                else {
-                    blockEnglish.textContent = '*****';
-                }
-            }
-        }
-
-        function onFilterChange(key, value, filter) {
-            dataMapped = [];
-            for (let i = 0; i < dataLength; i++) {
-                if (data[i][2]) {
-                    if (filter.type == '0') {
-                        mapper(data[i])
-                    }
-                    else if (filter.type == '1') {
-                        if (data[i][11] === 'H') {
-                            mapper(data[i])
-                        }
-                    }
-                    else if (filter.type === '2') {
-                        if (data[i][11] == 'Major' || data[i][11] == 'major') {
-                            mapper(data[i])
-                        }
-                    }
-                    else if (filter.type == '3') {
-                        if (!data[i][11]) {
-                            mapper(data[i])
-                        }
-                    }
-                }
-            }
-
-            function mapper(dataMapper) {
-                dataMapped.push({
-                    id: dataMapper[0],
-                    point: dataMapper[1],
-                    chinese: dataMapper[2],
-                    classifier: dataMapper[3],
-                    pinin: dataMapper[4],
-                    classPinin: dataMapper[5],
-                    english: dataMapper[6],
-                    vietnamese: dataMapper[7],
-                    example: dataMapper[9],
-                    from: dataMapper[10],
-                    type: dataMapper[11],
-                })
-            }
-
-            dataMappedlength = dataMapped.length;
-            if (dataMappedlength) {
-                const random = randomNumber(dataMappedlength);
-                reloadPage(random);
-            }
-        }
-
-        const filter = new Proxy(
-            {
-                chinese: true,
-                vietnamese: false,
-                english: false,
-                pinin: false,
-                type: 0,
-                point: ""
-            },
-            {
-                set(target, key, value) {
-                    if (target[key] === value) return true;
-
-                    target[key] = value;
-                    onFilterChange(key, value, target);
-                    return true;
-                }
-            }
-        );
-
-        function reloadPage(num) {
-            blockChinese.textContent = dataMapped[num].chinese ? dataMapped[num].chinese : 'None';
-            // blockVietnamese.textContent = dataMapped[num].vietnamese ? dataMapped[num].vietnamese : 'None';
-            blockVietnamese.textContent = '*****';
-            blockVietnamese.setAttribute('data-vietnamese', dataMapped[num].vietnamese ? dataMapped[num].vietnamese : 'None')
-            blockPinin.textContent = '*****';
-            blockPinin.setAttribute('data-pinin', dataMapped[num].pinin ? dataMapped[num].pinin : 'None')
-            blockEnglish.textContent = '*****';
-            blockEnglish.setAttribute('data-english', dataMapped[num].english ? dataMapped[num].english : 'None')
-            blockExample.textContent = dataMapped[num].example ? dataMapped[num].example : 'None';
+            return dataMapped;
         }
         function randomNumber(number) {
             return Math.floor(Math.random() * number);
