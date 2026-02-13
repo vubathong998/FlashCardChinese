@@ -59,13 +59,152 @@ function main() {
     //main function
     function handle(data) {
         let dataMapped = mapper(data);
+        // Filter out items with empty Chinese from the start
+        dataMapped = dataMapped.filter(item => item.chinese && item.chinese.trim() !== '');
+        let dataFiltered = [...dataMapped]; // Copy for filtering
         const appearingRanks = createRankFilterE(dataMapped);
 
-        
+        let currentIndex = null;
+        let isShown = false;
+        let selectedLanguage = 'chinese'; // Default: Chinese
+
+        // Initialize with random item
+        displayRandomItem();
+
+        // Event Listeners
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                toggleDisplay();
+            } else if (e.key === ' ' || e.code === 'Space') {
+                e.preventDefault();
+                displayRandomItem();
+            }
+        });
+
+        btnRandom.addEventListener('click', displayRandomItem);
+
+        // Language buttons
+        btnChinese.addEventListener('click', () => selectLanguage('chinese'));
+        btnBietnamese.addEventListener('click', () => selectLanguage('vietnamese'));
+        btnEnglish.addEventListener('click', () => selectLanguage('english'));
+        btnPinin.addEventListener('click', () => selectLanguage('pinin'));
+
+        // Filter buttons
+        btnRank.addEventListener('change', applyFilter);
+        document.querySelector('.header_btn-point').addEventListener('change', applyFilter);
+
+        function displayRandomItem() {
+            if (dataFiltered.length === 0) {
+                blockMainShow.textContent = 'No data';
+                return;
+            }
+            currentIndex = randomNumber(dataFiltered.length);
+            isShown = false;
+            updateDisplay();
+        }
+
+        function toggleDisplay() {
+            isShown = !isShown;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const item = dataFiltered[currentIndex];
+            if (!item) return;
+
+            // Map language to field layout
+            const languageMap = {
+                'chinese': {
+                    main: 'chinese',
+                    first: 'vietnamese'
+                },
+                'vietnamese': {
+                    main: 'vietnamese',
+                    first: 'chinese'
+                },
+                'english': {
+                    main: 'english',
+                    first: 'chinese'
+                },
+                'pinin': {
+                    main: 'pinin',
+                    first: 'chinese'
+                }
+            };
+
+            const config = languageMap[selectedLanguage];
+
+            if (!isShown) {
+                // Hide - only show main block
+                blockMainShow.textContent = getFieldValue(item, config.main);
+                blockFirst.textContent = '****';
+                blockSecond.textContent = '****';
+                blockThird.textContent = '****';
+                blockExample.textContent = '****';
+            } else {
+                // Show all
+                blockMainShow.textContent = getFieldValue(item, config.main);
+                blockFirst.textContent = getFieldValue(item, config.first);
+                blockSecond.textContent = `${item.pinin || ''} (${item.classPinin || ''})`;
+                blockThird.textContent = item.english || '';
+                blockExample.textContent = item.example || '';
+            }
+        }
+
+        function getFieldValue(item, field) {
+            switch (field) {
+                case 'chinese': return item.chinese || '';
+                case 'vietnamese': return item.vietnamese || '';
+                case 'english': return item.english || '';
+                case 'pinin': return `${item.pinin || ''} (${item.classPinin || ''})`;
+                default: return '';
+            }
+        }
+
+        function selectLanguage(lang) {
+            selectedLanguage = lang;
+            updateDisplay();
+            updateButtonStates(lang);
+        }
+
+        function updateButtonStates(lang) {
+            [btnChinese, btnBietnamese, btnEnglish, btnPinin].forEach(btn => btn.classList.remove('bg-purple-500', 'text-white'));
+
+            const buttonMap = {
+                'chinese': btnChinese,
+                'vietnamese': btnBietnamese,
+                'english': btnEnglish,
+                'pinin': btnPinin
+            };
+
+            if (buttonMap[lang]) {
+                buttonMap[lang].classList.add('bg-purple-500', 'text-white');
+            }
+        }
+
+        function applyFilter() {
+            const selectedRank = btnRank.value;
+            const selectedPoint = document.querySelector('.header_btn-point').value;
+
+            dataFiltered = dataMapped.filter(item => {
+                const rankMatch = selectedRank === '0' || item.rank === selectedRank;
+                const pointMatch = selectedPoint === '0' || String(item.point) === selectedPoint;
+                const hasChineseMatch = item.chinese && item.chinese.trim() !== '';
+                return rankMatch && pointMatch && hasChineseMatch;
+            });
+
+            if (dataFiltered.length > 0) {
+                displayRandomItem();
+            } else {
+                blockMainShow.textContent = 'No matching items';
+            }
+        }
 
         function createRankFilterE(dataMapped) {
             let appearingRanks = [];
-            appearingRanks.push(dataMapped[0].rank);
+            if (dataMapped.length > 0) {
+                appearingRanks.push(dataMapped[0].rank);
+            }
             dataMapped.forEach(item => {
                 if (item.rank) {
                     let isDuplicate = false;
@@ -87,9 +226,13 @@ function main() {
                 option.value = rank;
                 option.textContent = rank;
                 btnRank.appendChild(option);
+
             });
             return appearingRanks;
         }
+
+        // Set initial language button state
+        updateButtonStates('chinese');
 
     }
 
@@ -106,10 +249,12 @@ function main() {
                 english: dataMapper[i][6],
                 vietnamese: dataMapper[i][7],
                 type: dataMapper[i][8],
-                category: dataMapper[i][9],
-                rank: dataMapper[i][10],
+                example: dataMapper[i][9],
+                category: dataMapper[i][10],
+                rank: dataMapper[i][11],
             })
         }
+        console.log('Mapped data:', dataMapped);
         return dataMapped;
     }
     function randomNumber(number) {
