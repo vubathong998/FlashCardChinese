@@ -18,17 +18,13 @@
             <!-- Left buttons -->
             <div class="flex gap-3 flex-wrap">
                 <button
-                    class="header_btn-chinese px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">中文
-                    1</button>
+                    class="header_btn-chinese px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">中文</button>
                 <button
-                    class="header_btn-vietnamese px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">越南文
-                    1</button>
+                    class="header_btn-vietnamese px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">越南文</button>
                 <button
-                    class="header_btn-english px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">英文
-                    1</button>
+                    class="header_btn-english px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">英文</button>
                 <button
-                    class="header_btn-pinin px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">Pinyin
-                    1</button>
+                    class="header_btn-pinin px-5 py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-purple-100">Pinyin</button>
             </div>
 
             <!-- Right controls -->
@@ -47,11 +43,8 @@
                     <option value="10">10</option>
                 </select>
                 <select
-                    class="header_btn-type px-4 py-2 bg-white rounded-xl shadow text-sm font-semibold outline-none cursor-pointer">
+                    class="header_btn-rank px-4 py-2 bg-white rounded-xl shadow text-sm font-semibold outline-none cursor-pointer">
                     <option value="0">All</option>
-                    <option value="1">H</option>
-                    <option value="2">Major</option>
-                    <option value="3">Other</option>
                 </select>
 
                 <button class="header_btn-random flex items-center gap-2 px-5 py-2 bg-white rounded-xl shadow
@@ -78,14 +71,7 @@
 
             <!-- Chinese -->
             <div class="soft-bg-animate bg-white  rounded-2xl border gray-300 py-6 text-center">
-                <span class="body_block-chinese text-2xl font-semibold text-gray-700">中国</span>
-            </div>
-
-            <!-- Vietnamese -->
-            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
-                <span class="body_block-vietnamese text-base italic text-gray-600" data-vietnamese="">Tiếng
-                    Việt</span>
-
+                <span class="body_block-main_show text-2xl font-semibold text-gray-700">Main</span>
                 <!-- Eye icons -->
                 <div class="hide_second absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
                     <!-- Eye -->
@@ -107,65 +93,33 @@
                 </div>
             </div>
 
+            <!-- Vietnamese -->
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
+                <span class="body_block-first text-base italic text-gray-600" data-vietnamese="">First</span>
+            </div>
+
             <!-- Pinyin -->
             <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center"
                 data-pinin="">
-                <span class=" body_block-pinin text-base italic text-gray-600">Pinyin</span>
-
-                <!-- Eye icons -->
-                <div class="hide_third absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
-                    <!-- Eye -->
-                    <svg class="w-8 h-8 text-gray-500 hidden" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
-                        <circle cx="12" cy="12" r="3" />
-                    </svg>
-
-                    <!-- Eye off -->
-                    <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path d="M3 3l18 18" />
-                        <path d="M10.58 10.58A3 3 0 0012 15a3 3 0 002.42-4.42" />
-                        <path
-                            d="M9.88 4.24A10.94 10.94 0 0112 4.5c6.5 0 10.5 7.5 10.5 7.5a19.28 19.28 0 01-4.32 5.06" />
-                        <path d="M6.53 6.53A19.28 19.28 0 001.5 12s4 7.5 10.5 7.5a10.94 10.94 0 004.47-.94" />
-                    </svg>
-                </div>
+                <span class=" body_block-second text-base italic text-gray-600">Second</span>
             </div>
 
             <!-- English -->
             <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
-                <span class="body_block-english text-base italic text-gray-600" data-english="">English</span>
-                <!-- Eye icons -->
-                <div class=" hide_fourth absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer">
-                    <!-- Eye -->
-                    <svg class="w-8 h-8 text-gray-500 hidden" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12z" />
-                        <circle cx="12" cy="12" r="3" />
-                    </svg>
-
-                    <!-- Eye off -->
-                    <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path d="M3 3l18 18" />
-                        <path d="M10.58 10.58A3 3 0 0012 15a3 3 0 002.42-4.42" />
-                        <path
-                            d="M9.88 4.24A10.94 10.94 0 0112 4.5c6.5 0 10.5 7.5 10.5 7.5a19.28 19.28 0 01-4.32 5.06" />
-                        <path d="M6.53 6.53A19.28 19.28 0 001.5 12s4 7.5 10.5 7.5a10.94 10.94 0 004.47-.94" />
-                    </svg>
-                </div>
+                <span class="body_block-third text-base italic text-gray-600" data-english="">Third</span>
             </div>
             <!-- Example -->
             <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
                 <span class="body_block-example text-base italic text-gray-600" data-english="">example</span>
                 <!-- Eye icons -->
             </div>
+            <!-- show allF -->
             <div class=" soft-bg-animate relative bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
                 <span class="body_block-showAll text-base italic text-gray-600"
                     data-english="">body_block-showAll</span>
                 <!-- Eye icons -->
             </div>
+
             <div class=" soft-bg-animate relative bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
                 <div class="w-full max-w-3xl px-4 space-y-4">
 
