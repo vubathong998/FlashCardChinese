@@ -59,19 +59,16 @@ function main() {
     //main function
     function handle(data) {
         let dataMapped = mapper(data);
-        // Filter out items with empty Chinese from the start
         dataMapped = dataMapped.filter(item => item.chinese && item.chinese.trim() !== '');
-        let dataFiltered = [...dataMapped]; // Copy for filtering
+        let dataFiltered = [...dataMapped]; 
         const appearingRanks = createRankFilterE(dataMapped);
 
         let currentIndex = null;
         let isShown = false;
-        let selectedLanguage = 'chinese'; // Default: Chinese
+        let selectedLanguage = 'chinese'; 
 
-        // Initialize with random item
         displayRandomItem();
 
-        // Event Listeners
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 toggleDisplay();
@@ -83,13 +80,13 @@ function main() {
 
         btnRandom.addEventListener('click', displayRandomItem);
 
-        // Mobile/touch: tap any content block to toggle reveal (only on small screens)
         const clickableSelectors = ['.body_block-main_show', '.body_block-first', '.body_block-second', '.body_block-third', '.body_block-example', '.body_block-showAll'];
         clickableSelectors.forEach(sel => {
             const el = document.querySelector(sel);
             if (el) {
                 el.style.cursor = 'pointer';
-                el.closest('.soft-bg-animate').addEventListener('click', () => {
+                const container = el.closest('.soft-bg-animate') || el;
+                container.addEventListener('click', () => {
                     if (window.innerWidth <= 768) {
                         toggleDisplay();
                     }
@@ -97,13 +94,36 @@ function main() {
             }
         });
 
-        // Language buttons
+        let touchStartX = null;
+        let touchStartY = null;
+        const SWIPE_THRESHOLD = 50; 
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches && e.touches.length === 1) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            if (touchStartX === null) return;
+            const touchEndX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : null;
+            const touchEndY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : null;
+            if (touchEndX === null) {
+                touchStartX = null; touchStartY = null; return;
+            }
+            const dx = touchStartX - touchEndX;
+            const dy = touchStartY - touchEndY;
+            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dy) < 100 && window.innerWidth <= 768) {
+                displayRandomItem();
+            }
+            touchStartX = null; touchStartY = null;
+        }, { passive: true });
+
         btnChinese.addEventListener('click', () => selectLanguage('chinese'));
         btnBietnamese.addEventListener('click', () => selectLanguage('vietnamese'));
         btnEnglish.addEventListener('click', () => selectLanguage('english'));
         btnPinin.addEventListener('click', () => selectLanguage('pinin'));
 
-        // Filter buttons
         btnRank.addEventListener('change', applyFilter);
         document.querySelector('.header_btn-point').addEventListener('change', applyFilter);
 
@@ -126,7 +146,6 @@ function main() {
             const item = dataFiltered[currentIndex];
             if (!item) return;
 
-            // Map language to field layout
             const languageMap = {
                 'chinese': {
                     main: 'chinese',
