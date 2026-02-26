@@ -83,6 +83,20 @@ function main() {
 
         btnRandom.addEventListener('click', displayRandomItem);
 
+        // Mobile/touch: tap any content block to toggle reveal (only on small screens)
+        const clickableSelectors = ['.body_block-main_show', '.body_block-first', '.body_block-second', '.body_block-third', '.body_block-example', '.body_block-showAll'];
+        clickableSelectors.forEach(sel => {
+            const el = document.querySelector(sel);
+            if (el) {
+                el.style.cursor = 'pointer';
+                el.closest('.soft-bg-animate').addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        toggleDisplay();
+                    }
+                });
+            }
+        });
+
         // Language buttons
         btnChinese.addEventListener('click', () => selectLanguage('chinese'));
         btnBietnamese.addEventListener('click', () => selectLanguage('vietnamese'));
