@@ -74,7 +74,6 @@ function main() {
         let isShown = false;
         let selectedLanguage = 'chinese';
 
-
         function sortFiltered() {
             if (checkboxRandom && checkboxRandom.checked) {
                 dataMapped = shuffleRandomIndex(dataMapped);
