@@ -26,6 +26,8 @@ function main() {
     var oldContent = '';
 
     const typingPlace = document.getElementsByClassName('typing-place')[0];
+    let oldIndex = -1;
+
 
     //get data from google sheet
     fetch('https://docs.google.com/spreadsheets/d/1C_JtpNZzgy0iFdmt8oPAunVPQnihENhSIsD2L7H2Wd0/export?format=csv')
