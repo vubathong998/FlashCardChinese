@@ -110,14 +110,14 @@ function main() {
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
                 toggleDisplay();
             }
-            else if (e.ctrlKey && e.code === 'Space') {
+            else if (e.ctrlKey && e.code === 'Space' || e.code === 'ArrowLeft') {
                 e.preventDefault();
                 navigate(-1);
             }
-            else if (e.key === ' ' || e.code === 'Space') {
+            else if (e.code === 'Space' || e.code === 'ArrowRight') {
                 e.preventDefault();
                 navigate(1);
             }
