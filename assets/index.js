@@ -20,6 +20,8 @@ function main() {
     const blockExample = document.getElementsByClassName('body_block-example')[0];
 
     const typingPlace = document.getElementsByClassName('typing-place')[0];
+    let oldIndex = -1;
+
 
     //get data from google sheet
     fetch('https://docs.google.com/spreadsheets/d/1C_JtpNZzgy0iFdmt8oPAunVPQnihENhSIsD2L7H2Wd0/export?format=csv')
@@ -60,12 +62,12 @@ function main() {
     function handle(data) {
         let dataMapped = mapper(data);
         dataMapped = dataMapped.filter(item => item.chinese && item.chinese.trim() !== '');
-        let dataFiltered = [...dataMapped]; 
+        let dataFiltered = [...dataMapped];
         const appearingRanks = createRankFilterE(dataMapped);
 
         let currentIndex = null;
         let isShown = false;
-        let selectedLanguage = 'chinese'; 
+        let selectedLanguage = 'chinese';
 
         displayRandomItem();
 
@@ -96,7 +98,7 @@ function main() {
 
         let touchStartX = null;
         let touchStartY = null;
-        const SWIPE_THRESHOLD = 50; 
+        const SWIPE_THRESHOLD = 50;
         document.addEventListener('touchstart', (e) => {
             if (e.touches && e.touches.length === 1) {
                 touchStartX = e.touches[0].clientX;
@@ -221,7 +223,7 @@ function main() {
 
             dataFiltered = dataMapped.filter(item => {
                 const rankMatch = selectedRank === '0' || item.rank === selectedRank;
-                const pointMatch = selectedPoint === '0' || String(item.point) === selectedPoint;
+                const pointMatch = selectedPoint === '0' || item.point <= Number(selectedPoint);
                 const hasChineseMatch = item.chinese && item.chinese.trim() !== '';
                 return rankMatch && pointMatch && hasChineseMatch;
             });
@@ -291,7 +293,14 @@ function main() {
         return dataMapped;
     }
     function randomNumber(number) {
-        return Math.floor(Math.random() * number);
+        if (number === 1) return 0;
+        let randomIndex;
+        randomIndex = Math.floor(Math.random() * number);
+        while (randomIndex === oldIndex) {
+            randomIndex = Math.floor(Math.random() * number);
+        }
+        oldIndex = randomIndex;
+        return randomIndex;
     }
 }
 main();
