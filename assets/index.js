@@ -6,18 +6,24 @@ function main() {
     const btnBietnamese = document.getElementsByClassName('header_btn-vietnamese')[0];
     const btnEnglish = document.getElementsByClassName('header_btn-english')[0];
     const btnPinin = document.getElementsByClassName('header_btn-pinin')[0];
-    const btnRandom = document.getElementsByClassName('header_btn-random')[0];
+    // const btnRandom = document.getElementsByClassName('header_btn-random')[0];
+    const btnPrev = document.getElementsByClassName('header_btn-prev')[0];
+    const btnNext = document.getElementsByClassName('header_btn-next')[0];
+    const checkboxRandom = document.getElementsByClassName('header_checkbox_random')[0];
     const btnRank = document.getElementsByClassName('header_btn-rank')[0];
 
-    const showSecond = document.getElementsByClassName('hide_second')[0];
-    const showthird = document.getElementsByClassName('hide_third')[0];
-    const showfourth = document.getElementsByClassName('hide_fourth')[0];
+    // const showSecond = document.getElementsByClassName('hide_second')[0];
+    // const showthird = document.getElementsByClassName('hide_third')[0];
+    // const showfourth = document.getElementsByClassName('hide_fourth')[0];
 
     const blockMainShow = document.getElementsByClassName('body_block-main_show')[0];
     const blockFirst = document.getElementsByClassName('body_block-first')[0];
     const blockSecond = document.getElementsByClassName('body_block-second')[0];
     const blockThird = document.getElementsByClassName('body_block-third')[0];
     const blockExample = document.getElementsByClassName('body_block-example')[0];
+    const blockShowAll = document.getElementsByClassName('body_block-showAll')[0];
+
+    var oldContent = '';
 
     const typingPlace = document.getElementsByClassName('typing-place')[0];
     let oldIndex = -1;
@@ -31,7 +37,6 @@ function main() {
                 .trim()
                 .split('\n')
                 .map(row => row.split(','));
-            // Nếu muốn bỏ header
             const [header, ...data] = rows;
             return data;
         })
@@ -65,22 +70,65 @@ function main() {
         let dataFiltered = [...dataMapped];
         const appearingRanks = createRankFilterE(dataMapped);
 
-        let currentIndex = null;
+        let currentPos = 0;
         let isShown = false;
         let selectedLanguage = 'chinese';
 
-        displayRandomItem();
+        function sortFiltered() {
+            if (checkboxRandom && checkboxRandom.checked) {
+                dataMapped = shuffleRandomIndex(dataMapped);
+                dataFiltered.sort((a, b) => (a.randomIndex || 0) - (b.randomIndex || 0));
+            } else {
+                dataFiltered.sort((a, b) => (a.coreIndex || 0) - (b.coreIndex || 0));
+            }
+        }
+
+        function displayCurrent() {
+            if (dataFiltered.length === 0) {
+                blockMainShow.textContent = 'No data';
+                return;
+            }
+            if (currentPos < 0) currentPos = dataFiltered.length - 1;
+            if (currentPos >= dataFiltered.length) currentPos = 0;
+            isShown = false;
+            updateDisplay();
+        }
+
+        function navigate(delta) {
+            if (dataFiltered.length === 0) return;
+            const prevChinese = dataFiltered[currentPos] ? dataFiltered[currentPos].chinese : '';
+            let attempts = 0;
+            do {
+                currentPos = currentPos + delta;
+                if (currentPos < 0) currentPos = dataFiltered.length - 1;
+                if (currentPos >= dataFiltered.length) currentPos = 0;
+                attempts++;
+                if (attempts > dataFiltered.length) break;
+            } while (dataFiltered[currentPos] && dataFiltered[currentPos].chinese === prevChinese);
+            isShown = false;
+            updateDisplay();
+        }
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 toggleDisplay();
-            } else if (e.key === ' ' || e.code === 'Space') {
+            }
+            else if (e.ctrlKey && e.code === 'Space') {
                 e.preventDefault();
-                displayRandomItem();
+                navigate(-1);
+            }
+            else if (e.key === ' ' || e.code === 'Space') {
+                e.preventDefault();
+                navigate(1);
             }
         });
 
-        btnRandom.addEventListener('click', displayRandomItem);
+        if (btnNext) btnNext.addEventListener('click', () => navigate(1));
+        if (btnPrev) btnPrev.addEventListener('click', () => navigate(-1));
+        if (checkboxRandom) checkboxRandom.addEventListener('change', () => {
+            sortFiltered();
+            displayCurrent();
+        });
 
         const clickableSelectors = ['.body_block-main_show', '.body_block-first', '.body_block-second', '.body_block-third', '.body_block-example', '.body_block-showAll'];
         clickableSelectors.forEach(sel => {
@@ -113,10 +161,15 @@ function main() {
             if (touchEndX === null) {
                 touchStartX = null; touchStartY = null; return;
             }
-            const dx = touchStartX - touchEndX;
+            const dx = touchEndX - touchStartX;
             const dy = touchStartY - touchEndY;
-            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dy) < 100 && window.innerWidth <= 768) {
-                displayRandomItem();
+            if (Math.abs(dx) > SWIPE_THRESHOLD && window.innerWidth <= 768) {
+                if (dx < 0) {
+                    navigate(1);
+                }
+                else {
+                    navigate(-1);
+                }
             }
             touchStartX = null; touchStartY = null;
         }, { passive: true });
@@ -126,18 +179,16 @@ function main() {
         btnEnglish.addEventListener('click', () => selectLanguage('english'));
         btnPinin.addEventListener('click', () => selectLanguage('pinin'));
 
-        btnRank.addEventListener('change', applyFilter);
-        document.querySelector('.header_btn-point').addEventListener('change', applyFilter);
-
-        function displayRandomItem() {
-            if (dataFiltered.length === 0) {
-                blockMainShow.textContent = 'No data';
-                return;
-            }
-            currentIndex = randomNumber(dataFiltered.length);
-            isShown = false;
-            updateDisplay();
-        }
+        btnRank.addEventListener('change', () => {
+            applyFilter();
+            sortFiltered();
+            displayCurrent();
+        });
+        document.querySelector('.header_btn-point').addEventListener('change', () => {
+            applyFilter();
+            sortFiltered();
+            displayCurrent();
+        });
 
         function toggleDisplay() {
             isShown = !isShown;
@@ -145,44 +196,80 @@ function main() {
         }
 
         function updateDisplay() {
-            const item = dataFiltered[currentIndex];
+            const item = dataFiltered[currentPos];
             if (!item) return;
 
             const languageMap = {
                 'chinese': {
                     main: 'chinese',
-                    first: 'vietnamese'
+                    first: 'vietnamese',
+                    third: 'english',
+                    second: 'pinin'
                 },
                 'vietnamese': {
                     main: 'vietnamese',
-                    first: 'chinese'
+                    first: 'chinese',
+                    third: 'english',
+                    second: 'pinin'
                 },
                 'english': {
                     main: 'english',
-                    first: 'chinese'
+                    first: 'chinese',
+                    third: 'vietnamese',
+                    second: 'pinin'
                 },
                 'pinin': {
                     main: 'pinin',
-                    first: 'chinese'
+                    first: 'chinese',
+                    third: 'vietnamese',
+                    second: 'english'
                 }
             };
 
             const config = languageMap[selectedLanguage];
 
             if (!isShown) {
-                // Hide - only show main block
                 blockMainShow.textContent = getFieldValue(item, config.main);
                 blockFirst.textContent = '****';
                 blockSecond.textContent = '****';
                 blockThird.textContent = '****';
                 blockExample.textContent = '****';
+                blockShowAll.textContent = '****';
             } else {
-                // Show all
+                function blockShowAllContent() {
+                    let showAllContent = '';
+                    if (item.classifier || item.classPinin || item.category) {
+                        if (item.classifier && item.classifier.trim() !== '-' && item.classifier.trim() !== '—') {
+                            showAllContent += item.classifier;
+                        }
+                        else {
+                            showAllContent += 'Trống-None-无内容';
+                        }
+                        if (item.classPinin && item.classPinin.trim() !== '-' && item.classPinin.trim() !== '—') {
+                            showAllContent += ' | ' + item.classPinin;
+                        }
+                        else {
+                            showAllContent += ' | Trống-None-无内容';
+                        }
+                        if (item.category && item.category.trim() !== '-' && item.category.trim() !== '—') {
+                            showAllContent += ' | ' + item.category;
+                        }
+                        else {
+                            showAllContent += ' | Trống-None-无内容';
+                        }
+                    }
+                    else {
+                        showAllContent = 'Trống-None-无内容';
+                    }
+                    return showAllContent;
+                };
+
                 blockMainShow.textContent = getFieldValue(item, config.main);
                 blockFirst.textContent = getFieldValue(item, config.first);
-                blockSecond.textContent = `${item.pinin || ''} (${item.classPinin || ''})`;
-                blockThird.textContent = item.english || '';
-                blockExample.textContent = item.example || '';
+                blockSecond.textContent = getFieldValue(item, config.second);
+                blockThird.textContent = getFieldValue(item, config.third);
+                blockExample.textContent = item.example || 'Trống-None-无内容';
+                blockShowAll.textContent = blockShowAllContent();
             }
         }
 
@@ -191,7 +278,7 @@ function main() {
                 case 'chinese': return item.chinese || '';
                 case 'vietnamese': return item.vietnamese || '';
                 case 'english': return item.english || '';
-                case 'pinin': return `${item.pinin || ''} (${item.classPinin || ''})`;
+                case 'pinin': return `${item.pinin || ''} ${item.classPinin && item.classPinin.trim() !== '-' && item.classPinin !== '—' ? `(${item.classPinin})` : ''}`.trim();
                 default: return '';
             }
         }
@@ -229,44 +316,39 @@ function main() {
             });
 
             if (dataFiltered.length > 0) {
-                displayRandomItem();
+                currentPos = 0;
             } else {
                 blockMainShow.textContent = 'No matching items';
             }
         }
 
         function createRankFilterE(dataMapped) {
-            let appearingRanks = [];
-            if (dataMapped.length > 0) {
-                appearingRanks.push(dataMapped[0].rank);
-            }
+            const appearingRanks = [];
             dataMapped.forEach(item => {
-                if (item.rank) {
-                    let isDuplicate = false;
-                    for (let i = 0; i < appearingRanks.length; i++) {
-                        if (item.rank === appearingRanks[i]) {
-                            isDuplicate = true;
-                            break;
-                        }
-                    }
-                    if (!isDuplicate) {
-                        appearingRanks.push(item.rank);
+                if (item.rank && item.rank.toString().trim() !== '') {
+                    const val = item.rank.toString();
+                    if (!appearingRanks.includes(val)) {
+                        appearingRanks.push(val);
                     }
                 }
             });
-
-            // const uniqueRanks = [...new Set(dataMapped.map(item => item.rank))];
+            appearingRanks.sort((a, b) => {
+                const na = Number(a);
+                const nb = Number(b);
+                if (!isNaN(na) && !isNaN(nb)) return na - nb;
+                return a.localeCompare(b);
+            });
             appearingRanks.forEach(rank => {
                 const option = document.createElement('option');
                 option.value = rank;
                 option.textContent = rank;
                 btnRank.appendChild(option);
-
             });
             return appearingRanks;
         }
 
-        // Set initial language button state
+        sortFiltered();
+        displayCurrent();
         updateButtonStates('chinese');
 
     }
@@ -276,6 +358,8 @@ function main() {
         for (let i = 0; i < dataMapper.length; i++) {
             dataMapped.push({
                 id: dataMapper[i][0],
+                coreIndex: i,
+                randomIndex: i,
                 point: dataMapper[i][1],
                 chinese: dataMapper[i][2],
                 classifier: dataMapper[i][3],
@@ -289,18 +373,26 @@ function main() {
                 rank: dataMapper[i][11],
             })
         }
-        console.log('Mapped data:', dataMapped);
+        dataMapped = shuffleRandomIndex(dataMapped);
         return dataMapped;
     }
-    function randomNumber(number) {
-        if (number === 1) return 0;
-        let randomIndex;
-        randomIndex = Math.floor(Math.random() * number);
-        while (randomIndex === oldIndex) {
-            randomIndex = Math.floor(Math.random() * number);
+    function shuffleRandomIndex(arr) {
+        const length = arr.length;
+        const indexes = arr.map(item => item.randomIndex);
+        if (!indexes.length || indexes.every(v => v === undefined)) {
+            for (let i = 0; i < length; i++) {
+                indexes[i] = i;
+            }
         }
-        oldIndex = randomIndex;
-        return randomIndex;
+        for (let i = length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+        }
+        for (let i = 0; i < length; i++) {
+            arr[i].randomIndex = indexes[i];
+        }
+        return arr;
     }
+
 }
 main();
