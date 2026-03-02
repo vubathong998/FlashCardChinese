@@ -257,6 +257,12 @@ function main() {
                         else {
                             showAllContent += ' | Trống-None-无内容';
                         }
+                        if (item.rank && item.rank.trim() !== '-' && item.rank.trim() !== '—') {
+                            showAllContent += ' | ' + item.rank;
+                        }
+                        else {
+                            showAllContent += ' | Trống-None-无内容';
+                        }
                     }
                     else {
                         showAllContent = 'Trống-None-无内容';
