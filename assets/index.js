@@ -110,14 +110,14 @@ function main() {
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' || e.code === 'ArrowDown' || e.code === 'ArrowUp') {
                 toggleDisplay();
             }
-            else if (e.ctrlKey && e.code === 'Space') {
+            else if (e.ctrlKey && e.code === 'Space' || e.key === 'ArrowRight') {
                 e.preventDefault();
                 navigate(-1);
             }
-            else if (e.key === ' ' || e.code === 'Space') {
+            else if (e.key === ' ' || e.code === 'Space' || e.key === 'ArrowLeft') {
                 e.preventDefault();
                 navigate(1);
             }
@@ -314,9 +314,22 @@ function main() {
             const selectedRank = btnRank.value;
             const selectedPoint = document.querySelector('.header_btn-point').value;
 
+            const matchPoint = (pointValue, filterValue) => {
+                if (!filterValue || filterValue === '0') return true;
+                const pointNum = Number(pointValue);
+                const filterNum = Number(filterValue);
+                if (isNaN(pointNum) || isNaN(filterNum)) return false;
+                if (filterValue.startsWith('-')) {
+                    return pointNum <= Math.abs(filterNum);
+                }
+                return pointNum >= filterNum;
+            };
+
             dataFiltered = dataMapped.filter(item => {
-                const rankMatch = selectedRank === '0' || item.rank === selectedRank;
-                const pointMatch = selectedPoint === '0' || item.point <= Number(selectedPoint);
+                const rankMatch = selectedRank === '0'
+                    ? item.rank !== 'test'
+                    : item.rank === selectedRank;
+                const pointMatch = matchPoint(item.point, selectedPoint);
                 const hasChineseMatch = item.chinese && item.chinese.trim() !== '';
                 return rankMatch && pointMatch && hasChineseMatch;
             });
