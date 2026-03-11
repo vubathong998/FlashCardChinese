@@ -110,14 +110,14 @@ function main() {
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' || e.code === 'ArrowDown' || e.code === 'ArrowUp') {
+            if (e.key === 'Escape' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
                 toggleDisplay();
             }
-            else if (e.ctrlKey && e.code === 'Space' || e.key === 'ArrowRight') {
+            else if (e.ctrlKey && e.code === 'Space' || e.key === 'ArrowLeft') {
                 e.preventDefault();
                 navigate(-1);
             }
-            else if (e.key === ' ' || e.code === 'Space' || e.key === 'ArrowLeft') {
+            else if (e.key === ' ' || e.code === 'Space' || e.key === 'ArrowRight') {
                 e.preventDefault();
                 navigate(1);
             }
@@ -366,6 +366,7 @@ function main() {
             return appearingRanks;
         }
 
+        applyFilter();
         sortFiltered();
         displayCurrent();
         updateButtonStates('chinese');
