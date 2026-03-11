@@ -113,11 +113,11 @@ function main() {
             if (e.key === 'Escape' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
                 toggleDisplay();
             }
-            else if (e.ctrlKey && e.code === 'Space' || e.code === 'ArrowLeft') {
+            else if (e.ctrlKey && e.code === 'Space' || e.key === 'ArrowLeft') {
                 e.preventDefault();
                 navigate(-1);
             }
-            else if (e.code === 'Space' || e.code === 'ArrowRight') {
+            else if (e.key === ' ' || e.code === 'Space' || e.key === 'ArrowRight') {
                 e.preventDefault();
                 navigate(1);
             }
@@ -257,6 +257,12 @@ function main() {
                         else {
                             showAllContent += ' | Trống-None-无内容';
                         }
+                        if (item.rank && item.rank.trim() !== '-' && item.rank.trim() !== '—') {
+                            showAllContent += ' | ' + item.rank;
+                        }
+                        else {
+                            showAllContent += ' | Trống-None-无内容';
+                        }
                     }
                     else {
                         showAllContent = 'Trống-None-无内容';
@@ -308,9 +314,22 @@ function main() {
             const selectedRank = btnRank.value;
             const selectedPoint = document.querySelector('.header_btn-point').value;
 
+            const matchPoint = (pointValue, filterValue) => {
+                if (!filterValue || filterValue === '0') return true;
+                const pointNum = Number(pointValue);
+                const filterNum = Number(filterValue);
+                if (isNaN(pointNum) || isNaN(filterNum)) return false;
+                if (filterValue.startsWith('-')) {
+                    return pointNum <= Math.abs(filterNum);
+                }
+                return pointNum >= filterNum;
+            };
+
             dataFiltered = dataMapped.filter(item => {
-                const rankMatch = selectedRank === '0' || item.rank === selectedRank;
-                const pointMatch = selectedPoint === '0' || item.point <= Number(selectedPoint);
+                const rankMatch = selectedRank === '0'
+                    ? item.rank !== 'test'
+                    : item.rank === selectedRank;
+                const pointMatch = matchPoint(item.point, selectedPoint);
                 const hasChineseMatch = item.chinese && item.chinese.trim() !== '';
                 return rankMatch && pointMatch && hasChineseMatch;
             });
@@ -347,6 +366,7 @@ function main() {
             return appearingRanks;
         }
 
+        applyFilter();
         sortFiltered();
         displayCurrent();
         updateButtonStates('chinese');

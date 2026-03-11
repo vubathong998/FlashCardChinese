@@ -33,3 +33,14 @@
         background-color: #7bbdff;
     }
 }
+
+@font-face {
+    font-family: 'LXGFont';
+    src: url('./font/KaiTi-1.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.LXGFont {
+    /* font-family: 'LXGFont', sans-serif !important; */
+}
