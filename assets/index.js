@@ -109,6 +109,23 @@ function main() {
             updateDisplay();
         }
 
+        // document.addEventListener('mousedown', (e) => {
+        //     if (e.button === 1) {
+        //         e.preventDefault();
+        //         toggleDisplay();
+        //     }
+        // })
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            toggleDisplay();
+        });
+        window.addEventListener('wheel', (e) => {
+            if (e.deltaY < 0) {
+                navigate(1);
+            } else if (e.deltaY > 0) {
+                navigate(-1);
+            }
+        });
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
                 toggleDisplay();
