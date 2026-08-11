@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Language UI</title>
+
+    <link rel="stylesheet" href="assets/index.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <style>
+    </style>
+</head>
+
+<body class="soft-bg-page min-h-screen flex justify-center p-6">
+    <div class="w-full max-w-5xl">
+        <header class="mb-6 rounded-2xl px-6 py-4 border gray-500">
+            <div class="flex flex-col md:flex-row md:justify-between gap-1 pb-1">
+                <div class="flex justify-bietween gap-1">
+                    <button
+                        class="header_btn-chinese flex-1 md:flex-none px-4 py-2 md:px-5 md:py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-blue-400">中文</button>
+                    <button
+                        class="header_btn-vietnamese flex-1 md:flex-none px-4 py-2 md:px-5 md:py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-blue-400">越南文</button>
+                    <button
+                        class="header_btn-english flex-1 md:flex-none px-4 py-2 md:px-5 md:py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-blue-400">英文</button>
+                    <button
+                        class="header_btn-pinin flex-1 md:flex-none px-4 py-2 md:px-5 md:py-2 bg-white rounded-xl border gray-300 text-sm font-semibold hover:bg-blue-400">Pinyin</button>
+                </div>
+                <div class="flex justify-between md:block gap-3">
+                    <select
+                        class="header_btn-point flex-1 px-3 py-2 md:mx-0 flex-shrink-0 md:px-4 md:py-2 bg-white rounded-xl border gray-300 text-sm font-semibold outline-none cursor-pointer">
+                        <option value="0">All</option>
+                        <option value="-1">&lt;1</option>
+                        <option value="-3">&lt;3</option>
+                        <option value="-5">&lt;5</option>
+                        <option value="-7">&lt;7</option>
+                        <option value="-9">&lt;9</option>
+                        <option value="1">&gt;1</option>
+                        <option value="3">&gt;3</option>
+                        <option value="5">&gt;5</option>
+                        <option value="7">&gt;7</option>
+                        <option value="9">&gt;9</option>
+                    </select>
+                    <select
+                        class="header_btn-rank flex-1 px-3 py-2 md:px-4 md:py-2 bg-white rounded-xl shadow text-sm font-semibold outline-none cursor-pointer">
+                        <option value="0">All</option>
+                    </select>
+                </div>
+            </div>
+
+            <div flex class="flex justify-between mt-2">
+                <button class="header_btn-prev flex items-center gap-2 px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold 
+                        hover:bg-blue-400 active:scale-95 ">
+                    <span>下一页</span>
+                </button>
+                <label class="flex items-center justify-center gap-2 
+                                h-10 px-3 
+                                bg-white rounded-xl shadow 
+                                cursor-pointer select-none
+                                hover:bg-blue-400">
+
+                    <input type="checkbox"
+                        class="header_checkbox_random w-5 h-5 accent-purple-500 cursor-pointer shrink-0" />
+
+                    <span class="text-sm font-semibold leading-none">
+                        随机Suíjī
+                    </span>
+
+                </label>
+                <button class="header_btn-next flex items-center gap-2 px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold 
+                        hover:bg-blue-400 active:scale-95">
+                    <span>上一页</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- BODY -->
+        <main class="space-y-4 max-w-4xl mx-auto" is-show="false">
+
+            <!-- Chinese -->
+            <div class="soft-bg-animate bg-white  rounded-2xl border gray-300 py-6 text-center">
+                <span
+                    class="body_block-main_show text-6xl sm:text-5xl md:text-3xl font-semibold text-gray-700 LXGFont">Main</span>
+                <!-- Eye icons -->
+            </div>
+
+            <!-- Vietnamese -->
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
+                <span class="body_block-first text-5xl sm:text-4xl md:text-3xl italic text-gray-600"
+                    data-vietnamese="">First</span>
+            </div>
+
+            <!-- Pinyin -->
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center"
+                data-pinin="">
+                <span class=" body_block-second text-3xl sm:text-2xl md:text-base italic text-gray-600">Second</span>
+            </div>
+
+            <!-- English -->
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
+                <span class="body_block-third text-3xl sm:text-2xl md:text-base italic text-gray-600"
+                    data-english="">Third</span>
+            </div>
+            <!-- Example -->
+            <div class="soft-bg-animate relative  bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
+                <span class="body_block-example text-3xl sm:text-2xl md:text-base italic text-gray-600"
+                    data-english="">example</span>
+                <!-- Eye icons -->
+            </div>
+            <!-- show allF -->
+            <div class=" soft-bg-animate relative bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
+                <span class="body_block-showAll text-3xl sm:text-2xl md:text-base italic text-gray-600"
+                    data-english=""></span>
+                <!-- Eye icons -->
+            </div>
+
+            <div class=" soft-bg-animate relative bg-white rounded-2xl border gray-300 py-4 px-6 text-center">
+                <div class="w-full max-w-3xl px-4 space-y-4">
+
+                    <!-- Textarea giống card -->
+                    <div class="bg-white rounded-2xl h-24 flex items-center justify-center">
+                        <textarea class="
+                            typing-place
+                            w-full h-full
+                            resize-none
+                            bg-transparent
+                            text-center
+                            text-3xl md:text-2xl
+                            font-medium
+                            pl-4 md:pl-[70px]
+                            outline-none
+                            flex items-center justify-center
+                            placeholder-gray-400
+                            "></textarea>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/index.js"></script>
+
+</body>
+
+</html>
