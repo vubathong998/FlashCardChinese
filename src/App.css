@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+.soft-bg-page {
+  background-color: #eef7ff;
+}
+
+.soft-bg-animate {
+  transition: all 0.2s ease;
+}
+
+.soft-bg-animate:hover {
+  background-color: #f4faff;
+}
+
+@media (max-width: 768px) {
+  .soft-bg-animate {
+    border-radius: 1rem;
+  }
+}

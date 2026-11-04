@@ -1,23 +1,80 @@
 [
-    {
-        "id": 1,
-        "zh": "后来",
-        "pinyin": "hòulái",
-        "vi": "sau này",
-        "en": "later"
-    },
-    {
-        "id": 2,
-        "zh": "苹果",
-        "pinyin": "píngguǒ",
-        "vi": "quả táo",
-        "en": "apple"
-    },
-    {
-        "id": 3,
-        "zh": "学习",
-        "pinyin": "xuéxí",
-        "vi": "học tập",
-        "en": "study"
-    }
+  {
+    "id": 1,
+    "zh": "后来",
+    "pinyin": "hòulái",
+    "vi": "sau này",
+    "en": "later",
+    "rank": "1",
+    "point": 1,
+    "example": "后来我才知道真相。",
+    "category": "thời gian",
+    "classifier": "động từ",
+    "classPinyin": "hòulái"
+  },
+  {
+    "id": 2,
+    "zh": "苹果",
+    "pinyin": "píngguǒ",
+    "vi": "quả táo",
+    "en": "apple",
+    "rank": "2",
+    "point": 3,
+    "example": "我喜欢吃苹果。",
+    "category": "đồ ăn",
+    "classifier": "danh từ",
+    "classPinyin": "píngguǒ"
+  },
+  {
+    "id": 3,
+    "zh": "学习",
+    "pinyin": "xuéxí",
+    "vi": "học tập",
+    "en": "study",
+    "rank": "3",
+    "point": 5,
+    "example": "他每天都在学习中文。",
+    "category": "hoạt động",
+    "classifier": "động từ",
+    "classPinyin": "xuéxí"
+  },
+  {
+    "id": 4,
+    "zh": "朋友",
+    "pinyin": "péngyou",
+    "vi": "bạn bè",
+    "en": "friend",
+    "rank": "1",
+    "point": 2,
+    "example": "朋友们都来参加聚会。",
+    "category": "mối quan hệ",
+    "classifier": "danh từ",
+    "classPinyin": "péngyou"
+  },
+  {
+    "id": 5,
+    "zh": "明天",
+    "pinyin": "míngtiān",
+    "vi": "ngày mai",
+    "en": "tomorrow",
+    "rank": "2",
+    "point": 4,
+    "example": "明天我们去旅游。",
+    "category": "thời gian",
+    "classifier": "danh từ",
+    "classPinyin": "míngtiān"
+  },
+  {
+    "id": 6,
+    "zh": "老师",
+    "pinyin": "lǎoshī",
+    "vi": "giáo viên",
+    "en": "teacher",
+    "rank": "3",
+    "point": 6,
+    "example": "老师教我们中文。",
+    "category": "người",
+    "classifier": "danh từ",
+    "classPinyin": "lǎoshī"
+  }
 ]
