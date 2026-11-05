@@ -12,6 +12,12 @@ export default function HomePage() {
             >
                 Vào ứng dụng Học Từ Vựng (Flashcard) →
             </Link>
+            <Link
+                to="/typegame"
+                className="px-6 py-3 m-4 bg-orange-600 text-white rounded-xl shadow-md hover:bg-orange-700 transition"
+            >
+                Vào ứng dụng Học Từ Vựng (Typing Game) →
+            </Link>
         </div>
     );
 }
