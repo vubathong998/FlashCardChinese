@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import HeaderCard from '../../components/HeaderCard.jsx';
+import HeaderCard, { getRankOptions } from '../../components/HeaderCard.jsx';
 import Loading from '../../components/Loading.jsx';
 import CardComponent from '../flashCardPage/CardComponent.jsx';
+import { readGameSettings, saveGameSettings } from '../../utils/gameSettings.js';
 
 import { Link } from 'react-router-dom';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1C_JtpNZzgy0iFdmt8oPAunVPQnihENhSIsD2L7H2Wd0/export?format=csv';
+const SETTINGS_KEY = 'typeGameSettings';
 
 const LANGUAGE_FIELDS = {
     chinese: 'chinese',
@@ -68,10 +70,11 @@ function getDisplayValue(value) {
 
 export default function TypeGamePage() {
     const [data, setData] = useState([]);
+    const [savedSettings] = useState(() => readGameSettings(SETTINGS_KEY));
     const [selectedLanguage, setSelectedLanguage] = useState('vietnamese');
-    const [rankFilter, setRankFilter] = useState('0');
-    const [pointFilter, setPointFilter] = useState('0');
-    const [isRandom, setIsRandom] = useState(false);
+    const [rankFilter, setRankFilter] = useState(() => typeof savedSettings.rank === 'string' ? savedSettings.rank : '0');
+    const [pointFilter, setPointFilter] = useState(() => typeof savedSettings.point === 'string' ? savedSettings.point : '0');
+    const [isRandom, setIsRandom] = useState(() => savedSettings.random === true);
     const [currentPos, setCurrentPos] = useState(0);
     const [answer, setAnswer] = useState('');
     const [answerStatus, setAnswerStatus] = useState('');
@@ -91,7 +94,11 @@ export default function TypeGamePage() {
             .then((csv) => {
                 const rows = csv.trim().split('\n').map((row) => row.split(','));
                 const [, ...dataRows] = rows;
-                setData(mapSheetData(dataRows));
+                const mapped = mapSheetData(dataRows);
+                const ranks = getRankOptions(mapped);
+                const validSavedRank = ranks.includes(String(savedSettings.rank)) ? savedSettings.rank : '0';
+                setData(mapped);
+                setRankFilter(validSavedRank);
                 setLoading(false);
             })
             .catch((error) => {
@@ -102,7 +109,11 @@ export default function TypeGamePage() {
             });
 
         return () => controller.abort();
-    }, []);
+    }, [savedSettings]);
+
+    useEffect(() => {
+        saveGameSettings(SETTINGS_KEY, { rank: rankFilter, point: pointFilter, random: isRandom });
+    }, [rankFilter, pointFilter, isRandom]);
 
     const filteredData = useMemo(() => {
         let result = [...data];

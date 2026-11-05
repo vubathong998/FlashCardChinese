@@ -2,8 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Loading from '../../components/Loading.jsx';
 import HeaderCard, { getRankOptions } from '../../components/HeaderCard.jsx';
 import CardComponent from './CardComponent.jsx';
+import { readGameSettings, saveGameSettings } from '../../utils/gameSettings.js';
 
 import { Link } from 'react-router-dom';
+
+const SETTINGS_KEY = 'flashcardSettings';
 
 const LANGUAGE_CONFIG = {
   chinese: { main: 'chinese', first: 'vietnamese', second: 'pinyin', third: 'english' },
@@ -68,17 +71,11 @@ function getFieldValue(item, field) {
 
 export default function FlashcardPage() {
   const [dataMapped, setDataMapped] = useState([]);
+  const [savedSettings] = useState(() => readGameSettings(SETTINGS_KEY));
   const [selectedLanguage, setSelectedLanguage] = useState('chinese');
-  const [rankFilter, setRankFilter] = useState('0');
-  const [pointFilter, setPointFilter] = useState('0');
-  const [isRandom, setIsRandom] = useState(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('flashcardSettings') || '{}');
-      return Boolean(saved.random);
-    } catch {
-      return false;
-    }
-  });
+  const [rankFilter, setRankFilter] = useState(() => typeof savedSettings.rank === 'string' ? savedSettings.rank : '0');
+  const [pointFilter, setPointFilter] = useState(() => typeof savedSettings.point === 'string' ? savedSettings.point : '0');
+  const [isRandom, setIsRandom] = useState(() => savedSettings.random === true);
   const [currentPos, setCurrentPos] = useState(0);
   const [isShown, setIsShown] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -94,8 +91,7 @@ export default function FlashcardPage() {
         const mapped = mapper(data).filter((item) => item.chinese && item.chinese.trim() !== '');
         const ranks = getRankOptions(mapped);
 
-        const saved = JSON.parse(localStorage.getItem('flashcardSettings') || '{}');
-        const validSavedRank = ranks.includes(String(saved.rank)) ? saved.rank : '0';
+        const validSavedRank = ranks.includes(String(savedSettings.rank)) ? savedSettings.rank : '0';
 
         setDataMapped(mapped);
         setRankFilter(validSavedRank);
@@ -105,15 +101,11 @@ export default function FlashcardPage() {
         console.error('Sheet error:', error);
         setLoading(false);
       });
-  }, []);
+  }, [savedSettings]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem('flashcardSettings', JSON.stringify({ rank: rankFilter, random: isRandom }));
-    } catch {
-      // ignore storage issues
-    }
-  }, [rankFilter, isRandom]);
+    saveGameSettings(SETTINGS_KEY, { rank: rankFilter, point: pointFilter, random: isRandom });
+  }, [rankFilter, pointFilter, isRandom]);
 
   const dataFiltered = useMemo(() => {
     if (!dataMapped.length) return [];
