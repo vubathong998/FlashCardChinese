@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Loading from '../../components/Loading.jsx';
+import CardComponent from './CardComponent.jsx';
 
 const LANGUAGE_CONFIG = {
   chinese: { main: 'chinese', first: 'vietnamese', second: 'pinyin', third: 'english' },
@@ -9,7 +10,7 @@ const LANGUAGE_CONFIG = {
 };
 
 const POINT_OPTIONS = [
-  { value: '0', label: 'All' },
+  { value: '0', label: 'Tất cả điểm nhớ' },
   { value: '-1', label: '<1' },
   { value: '-3', label: '<3' },
   { value: '-5', label: '<5' },
@@ -271,7 +272,7 @@ export default function FlashcardPage() {
         <header className="mb-6 rounded-2xl px-4 py-4 md:px-6 border border-slate-200 bg-white/80">
           <div className="flex flex-col md:flex-row md:justify-between gap-2 pb-1">
             <div className="flex gap-1 flex-wrap">
-              {Object.entries({ chinese: '中文', vietnamese: '越南文', english: '英文', pinyin: 'Pinyin' }).map(([lang, label]) => (
+              {Object.entries({ chinese: 'Trung', vietnamese: 'Việt', english: 'Anh', pinyin: 'Pinyin' }).map(([lang, label]) => (
                 <button
                   key={lang}
                   type="button"
@@ -302,10 +303,11 @@ export default function FlashcardPage() {
                 onChange={(event) => setRankFilter(event.target.value)}
                 className="header_btn-rank flex-1 px-3 py-2 md:px-4 md:py-2 md:mx-1 bg-white rounded-xl border border-slate-300 text-sm font-semibold outline-none cursor-pointer"
               >
-                <option value="0">All</option>
-                {rankOptions.map((rank) => (
-                  <option key={rank} value={rank}>{rank}</option>
-                ))}
+                <option value="0">Tất cả rank</option>
+                {rankOptions.map((rank) => {
+                  if (rank == 0 || rank == '0') return null;
+                  return <option key={rank} value={rank}>{rank}</option>
+                })}
               </select>
             </div>
           </div>
@@ -316,7 +318,7 @@ export default function FlashcardPage() {
               className="header_btn-prev flex items-center justify-center gap-2 px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-blue-100 active:scale-95 border border-slate-200 cursor-pointer!"
               onClick={() => navigate(-1)}
             >
-              <span>下一页</span>
+              <span>Lùi</span>
             </button>
 
             <label className="flex items-center justify-center gap-2 h-10 px-3 bg-white rounded-xl shadow cursor-pointer select-none hover:bg-blue-100 border border-slate-200">
@@ -326,7 +328,7 @@ export default function FlashcardPage() {
                 onChange={(event) => setIsRandom(event.target.checked)}
                 className="header_checkbox_random w-5 h-5 accent-purple-500 cursor-pointer shrink-0"
               />
-              <span className="text-sm font-semibold leading-none">随机Suíjī</span>
+              <span className="text-sm font-semibold leading-none">Ngẫu nhiên</span>
             </label>
 
             <button
@@ -334,7 +336,7 @@ export default function FlashcardPage() {
               className="header_btn-next flex items-center justify-center gap-2 px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-blue-100 active:scale-95 border border-slate-200 cursor-pointer"
               onClick={() => navigate(1)}
             >
-              <span>上一页</span>
+              <span>Tiến</span>
             </button>
           </div>
         </header>
@@ -345,72 +347,50 @@ export default function FlashcardPage() {
           onTouchEnd={handleTouchEnd}
         >
           {loading ? (
-            <div
-              role="status"
-              aria-live="polite"
-              className="flex min-h-64 flex-col items-center justify-center gap-4 rounded-2xl border border-slate-200 bg-white text-slate-600"
-            >
-              <span
-                aria-hidden="true"
-                className="h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-500"
-              />
-              <span className="text-sm font-semibold">Đang tải chữ tầu, vui lòng đợi tí...</span>
-            </div>
+            <Loading text="Đang tải chữ tầu, vui lòng đợi tí..." />
           ) : (
             <>
-              <div
-                className="soft-bg-animate bg-white rounded-2xl border border-slate-200 py-6 text-center"
+              <CardComponent
+                className="py-6"
+                textClassName="body_block-main_show text-5xl sm:text-5xl md:text-3xl font-semibold text-slate-700 select-text"
+                text={currentItem ? getFieldValue(currentItem, currentConfig.main) : 'No data'}
                 onClick={handleContentToggle}
-              >
-                <span className="body_block-main_show text-5xl sm:text-5xl md:text-3xl font-semibold text-slate-700 select-text">
-                  {currentItem ? getFieldValue(currentItem, currentConfig.main) : 'No data'}
-                </span>
-              </div>
+              />
 
-              <div
-                className="soft-bg-animate bg-white rounded-2xl border border-slate-200 py-4 px-6 text-center"
+              <CardComponent
+                className="py-4 px-6"
+                textClassName="body_block-first text-5xl sm:text-4xl md:text-3xl italic text-slate-600"
+                text={renderValue(currentConfig.first)}
                 onClick={handleContentToggle}
-              >
-                <span className="body_block-first text-5xl sm:text-4xl md:text-3xl italic text-slate-600">
-                  {renderValue(currentConfig.first)}
-                </span>
-              </div>
+              />
 
-              <div
-                className="soft-bg-animate bg-white rounded-2xl border border-slate-200 py-4 px-6 text-center"
+              <CardComponent
+                className="py-4 px-6"
+                textClassName="body_block-second text-3xl sm:text-2xl md:text-base italic text-slate-600"
+                text={renderValue(currentConfig.second)}
                 onClick={handleContentToggle}
-              >
-                <span className="body_block-second text-3xl sm:text-2xl md:text-base italic text-slate-600">
-                  {renderValue(currentConfig.second)}
-                </span>
-              </div>
+              />
 
-              <div
-                className="soft-bg-animate bg-white rounded-2xl border border-slate-200 py-4 px-6 text-center"
+              <CardComponent
+                className="py-4 px-6"
+                textClassName="body_block-third text-3xl sm:text-2xl md:text-base italic text-slate-600"
+                text={renderValue(currentConfig.third)}
                 onClick={handleContentToggle}
-              >
-                <span className="body_block-third text-3xl sm:text-2xl md:text-base italic text-slate-600">
-                  {renderValue(currentConfig.third)}
-                </span>
-              </div>
+              />
 
-              <div
-                className="soft-bg-animate bg-white rounded-2xl border border-slate-200 py-4 px-6 text-center"
+              <CardComponent
+                className="py-4 px-6"
+                textClassName="body_block-example text-3xl sm:text-2xl md:text-base italic text-slate-600"
+                text={currentItem ? (isShown ? currentItem.example || 'Trống-None-无内容' : '****') : 'No data'}
                 onClick={handleContentToggle}
-              >
-                <span className="body_block-example text-3xl sm:text-2xl md:text-base italic text-slate-600">
-                  {currentItem ? (isShown ? currentItem.example || 'Trống-None-无内容' : '****') : 'No data'}
-                </span>
-              </div>
+              />
 
-              <div
-                className="soft-bg-animate bg-white rounded-2xl border border-slate-200 py-4 px-6 text-center"
+              <CardComponent
+                className="py-4 px-6"
+                textClassName="body_block-showAll text-3xl sm:text-2xl md:text-base italic text-slate-600"
+                text={currentItem ? (isShown ? showAllText() : '****') : 'No data'}
                 onClick={handleContentToggle}
-              >
-                <span className="body_block-showAll text-3xl sm:text-2xl md:text-base italic text-slate-600">
-                  {currentItem ? (isShown ? showAllText() : '****') : 'No data'}
-                </span>
-              </div>
+              />
             </>
           )}
         </main>

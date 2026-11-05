@@ -1,6 +1,6 @@
-import FlashcardPage from './pages/FlashcardPage.jsx'
-import HomePage from './pages/HomePage.jsx'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import FlashcardPage from './pages/flashCardPage/FlashcardPage.jsx';
+import HomePage from './pages/homePage.jsx';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
