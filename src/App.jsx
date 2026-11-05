@@ -1,5 +1,5 @@
 import FlashcardPage from './pages/flashCardPage/FlashcardPage.jsx';
-import HomePage from './pages/homePage.jsx';
+import HomePage from './pages/HomePage.jsx';
 import TypeGamePage from './pages/typingGame/TypeGamePage.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
