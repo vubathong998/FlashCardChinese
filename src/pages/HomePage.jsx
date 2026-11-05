@@ -10,13 +10,19 @@ export default function HomePage() {
                 to="/myflashcard"
                 className="px-6 py-3 bg-purple-600 text-white rounded-xl shadow-md hover:bg-purple-700 transition"
             >
-                Vào ứng dụng Học Từ Vựng (Flashcard) →
+                Vào ứng dụng Học Từ Vựng (Thẻ học từ) →
             </Link>
             <Link
                 to="/typegame"
                 className="px-6 py-3 m-4 bg-orange-600 text-white rounded-xl shadow-md hover:bg-orange-700 transition"
             >
-                Vào ứng dụng Học Từ Vựng (Typing Game) →
+                Vào ứng dụng Học Từ Vựng (Nhấn chữ) →
+            </Link>
+            <Link
+                to="/multiplechoicegame"
+                className="px-6 py-3 bg-blue-600 text-white rounded-xl shadow-md hover:bg-blue-700 transition"
+            >
+                Vào ứng dụng Học Từ Vựng (Câu hỏi trắc nghiệm) →
             </Link>
         </div>
     );
