@@ -18,6 +18,8 @@
   border-bottom: 1px solid #e2e8f0;
   background: rgb(255 255 255 / 96%);
   box-shadow: 0 2px 12px rgb(15 23 42 / 5%);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .site-header__inner {
@@ -89,6 +91,19 @@
   color: #334155;
   font: inherit;
   cursor: pointer;
+}
+
+.site-header__language select:focus,
+.site-header__language select:focus-visible {
+  border-color: #cbd5e1;
+  outline: none;
+  box-shadow: none;
+}
+
+.site-header a,
+.site-header button,
+.site-header select {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .site-header__menu-button {

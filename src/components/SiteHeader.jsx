@@ -16,7 +16,8 @@ export default function SiteHeader({ localeCode, onLanguageChange }) {
     { path: '/', label: translate(language, 'home') },
     { path: '/myflashcard', label: translate(language, 'flashcards') },
     { path: '/typegame', label: translate(language, 'typingGame') },
-    { path: '/multiplechoicegame', label: translate(language, 'multipleChoice') }
+    { path: '/multiplechoicegame', label: translate(language, 'multipleChoice') },
+    { path: '/cv-online', label: translate(language, 'cvOnline') }
   ];
 
   useEffect(() => {
@@ -61,10 +62,12 @@ export default function SiteHeader({ localeCode, onLanguageChange }) {
           </nav>
 
           <label className="site-header__language">
-            <span>{translate(language, 'language')}</span>
             <select
               value={localeCode}
-              onChange={(event) => onLanguageChange(event.target.value)}
+              onChange={(event) => {
+                onLanguageChange(event.target.value);
+                event.currentTarget.blur();
+              }}
               aria-label={translate(language, 'selectLanguage')}
             >
               {LANGUAGES.map((language) => (
