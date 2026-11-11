@@ -3,8 +3,7 @@ import HeaderCard, { getRankOptions } from '../../components/HeaderCard.jsx';
 import Loading from '../../components/Loading.jsx';
 import CardComponent from '../flashCardPage/CardComponent.jsx';
 import { readGameSettings, saveGameSettings } from '../../utils/gameSettings.js';
-
-import { Link } from 'react-router-dom';
+import { translate, useAppLanguage } from '../../utils/appLanguage.js';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1C_JtpNZzgy0iFdmt8oPAunVPQnihENhSIsD2L7H2Wd0/export?format=csv';
 const SETTINGS_KEY = 'typeGameSettings';
@@ -69,6 +68,7 @@ function getDisplayValue(value) {
 }
 
 export default function TypeGamePage() {
+    const appLanguage = useAppLanguage();
     const [data, setData] = useState([]);
     const [savedSettings] = useState(() => readGameSettings(SETTINGS_KEY));
     const [selectedLanguage, setSelectedLanguage] = useState('vietnamese');
@@ -104,7 +104,7 @@ export default function TypeGamePage() {
             .catch((error) => {
                 if (error.name === 'AbortError') return;
                 console.error('Sheet error:', error);
-                setLoadError('Không thể tải dữ liệu từ Google Sheet. Vui lòng thử tải lại trang.');
+                setLoadError(translate(appLanguage, 'loadingError'));
                 setLoading(false);
             });
 
@@ -177,14 +177,14 @@ export default function TypeGamePage() {
 
     const fullDetails = currentItem
         ? [
-            ['Tiếng Trung', currentItem.chinese],
-            ['Phân loại', currentItem.classifier],
-            ['Pinyin', [currentItem.pinyin, currentItem.classPinin].filter(Boolean).join(' ')],
-            ['Tiếng Việt', currentItem.vietnamese],
-            ['Tiếng Anh', currentItem.english],
-            ['Loại từ', currentItem.type],
-            ['Ví dụ', currentItem.example],
-            ['Chủ đề', currentItem.category],
+            [translate(appLanguage, 'chinese'), currentItem.chinese],
+            [translate(appLanguage, 'classifier'), currentItem.classifier],
+            [translate(appLanguage, 'pinyin'), [currentItem.pinyin, currentItem.classPinin].filter(Boolean).join(' ')],
+            [translate(appLanguage, 'vietnamese'), currentItem.vietnamese],
+            [translate(appLanguage, 'english'), currentItem.english],
+            [translate(appLanguage, 'wordType'), currentItem.type],
+            [translate(appLanguage, 'example'), currentItem.example],
+            [translate(appLanguage, 'category'), currentItem.category],
             ['Rank', currentItem.rank]
         ]
         : [];
@@ -207,7 +207,7 @@ export default function TypeGamePage() {
 
                 <main className="space-y-4 max-w-4xl mx-auto" onKeyDown={handleShortcut}>
                     {loading ? (
-                        <Loading text="Đang tải dữ liệu, vui lòng đợi..." />
+                        <Loading text={translate(appLanguage, 'loading')} />
                     ) : loadError ? (
                         <div role="alert" className="rounded-2xl border border-red-300 bg-white p-6 text-center text-red-700">
                             {loadError}
@@ -216,20 +216,20 @@ export default function TypeGamePage() {
                         <>
                             {selectedLanguage === 'chinese' && (
                                 <div className="rounded-2xl border border-amber-300 bg-amber-50 px-5 py-3 text-center font-medium text-amber-800">
-                                    Phần này đang phát triển chưa sử dụng được.
+                                    {translate(appLanguage, 'developing')}
                                 </div>
                             )}
 
                             <CardComponent
                                 className="py-6 px-6"
                                 textClassName="text-4xl sm:text-5xl font-semibold text-slate-700"
-                                text={getPrompt(currentItem, selectedLanguage) || 'Trống-None-无内容'}
+                                text={getPrompt(currentItem, selectedLanguage) || translate(appLanguage, 'empty')}
                             />
 
                             <CardComponent
                                 className="px-5 py-3"
                                 textClassName="text-base sm:text-lg italic text-slate-500"
-                                text={`Ví dụ: ${getDisplayValue(currentItem.example)}`}
+                                text={`${translate(appLanguage, 'example')}: ${getDisplayValue(currentItem.example)}`}
                             />
 
                             <form className="space-y-3" onSubmit={handleSubmit}>
@@ -240,8 +240,8 @@ export default function TypeGamePage() {
                                         setAnswer(event.target.value);
                                         if (answerStatus !== 'correct') setAnswerStatus('');
                                     }}
-                                    placeholder="Nhập chữ tiếng Trung..."
-                                    aria-label="Nhập chữ tiếng Trung"
+                                    placeholder={translate(appLanguage, 'enterChinese')}
+                                    aria-label={translate(appLanguage, 'enterChinese')}
                                     aria-invalid={answerStatus === 'incorrect'}
                                     aria-describedby="typing-answer-status"
                                     className={`w-full rounded-2xl border-2 bg-white px-5 py-4 text-2xl text-slate-800 outline-none transition focus:ring-2 focus:ring-purple-200 ${answerStatus === 'incorrect'
@@ -264,11 +264,11 @@ export default function TypeGamePage() {
                                             }`}
                                     >
                                         {answerStatus === 'incorrect'
-                                            ? 'Chưa đúng, hãy thử lại.'
+                                            ? translate(appLanguage, 'incorrect')
                                             : answerStatus === 'correct'
-                                                ? 'Chính xác!'
+                                                ? translate(appLanguage, 'correct')
                                                 : answerStatus === 'revealed'
-                                                    ? 'Đã hiển thị đáp án.'
+                                                    ? translate(appLanguage, 'revealed')
                                                     : ' '}
                                     </p>
                                     <div className="flex flex-wrap justify-center gap-3">
@@ -277,20 +277,22 @@ export default function TypeGamePage() {
                                             onClick={handleRevealAnswer}
                                             className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 shadow transition hover:bg-slate-100 active:scale-95"
                                         >
-                                            Chịu, k biết
+                                            {translate(appLanguage, 'dontKnow')}
                                         </button>
                                         <button
                                             type="submit"
                                             className="rounded-xl bg-purple-500 px-8 py-3 font-semibold text-white shadow transition hover:bg-purple-600 active:scale-95"
                                         >
-                                            {answerStatus === 'correct' || answerStatus === 'revealed' ? 'Tiếp tục' : 'Kiểm tra'}
+                                            {answerStatus === 'correct' || answerStatus === 'revealed'
+                                                ? translate(appLanguage, 'continue')
+                                                : translate(appLanguage, 'check')}
                                         </button>
                                     </div>
                                 </div>
                             </form>
 
                             {(answerStatus === 'correct' || answerStatus === 'revealed') && (
-                                <section aria-label="Thông tin từ vựng" className="space-y-3">
+                                <section aria-label={translate(appLanguage, 'details')} className="space-y-3">
                                     {fullDetails.map(([label, value]) => (
                                         <CardComponent
                                             key={label}
@@ -304,14 +306,11 @@ export default function TypeGamePage() {
                         </>
                     ) : (
                         <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-600">
-                            Không có từ phù hợp với bộ lọc đã chọn.
+                            {translate(appLanguage, 'noMatchingWord')}
                         </div>
                     )}
                 </main>
 
-                <div className="mt-6 text-center">
-                    <Link to="/" className="inline-block text-sm text-slate-500 hover:underline">← Về trang chủ</Link>
-                </div>
             </div>
         </div>
     );

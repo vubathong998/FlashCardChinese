@@ -1,24 +1,11 @@
 import { useMemo } from 'react';
+import { translate, useAppLanguage } from '../utils/appLanguage.js';
 
-const LANGUAGE_OPTIONS = {
-  chinese: 'Trung',
-  vietnamese: 'Việt',
-  english: 'Anh',
-  pinyin: 'Pinyin'
-};
-
-const POINT_OPTIONS = [
-  { value: '0', label: 'Tất cả điểm nhớ' },
-  { value: '-1', label: '<1' },
-  { value: '-3', label: '<3' },
-  { value: '-5', label: '<5' },
-  { value: '-7', label: '<7' },
-  { value: '-9', label: '<9' },
-  { value: '1', label: '>1' },
-  { value: '3', label: '>3' },
-  { value: '5', label: '>5' },
-  { value: '7', label: '>7' },
-  { value: '9', label: '>9' }
+const LANGUAGE_OPTIONS = [
+  ['chinese', 'chinese'],
+  ['vietnamese', 'vietnamese'],
+  ['english', 'english'],
+  ['pinyin', 'pinyin']
 ];
 
 export function getRankOptions(data) {
@@ -44,12 +31,26 @@ export default function HeaderCard({
   onNavigate
 }) {
   const rankOptions = useMemo(() => getRankOptions(data), [data]);
+  const uiLanguage = useAppLanguage();
+  const pointOptions = [
+    { value: '0', label: translate(uiLanguage, 'allPoints') },
+    { value: '-1', label: '<1' },
+    { value: '-3', label: '<3' },
+    { value: '-5', label: '<5' },
+    { value: '-7', label: '<7' },
+    { value: '-9', label: '<9' },
+    { value: '1', label: '>1' },
+    { value: '3', label: '>3' },
+    { value: '5', label: '>5' },
+    { value: '7', label: '>7' },
+    { value: '9', label: '>9' }
+  ];
 
   return (
     <header className="mb-6 rounded-2xl px-4 py-4 md:px-6 border border-slate-200 bg-white/80">
       <div className="flex flex-col md:flex-row md:justify-between gap-2 pb-1">
         <div className="flex gap-1 flex-wrap">
-          {Object.entries(LANGUAGE_OPTIONS).map(([lang, label]) => (
+          {LANGUAGE_OPTIONS.map(([lang, labelKey]) => (
             <button
               key={lang}
               type="button"
@@ -59,7 +60,7 @@ export default function HeaderCard({
                 }`}
               onClick={() => onLanguageChange(lang)}
             >
-              {label}
+              {translate(uiLanguage, labelKey)}
             </button>
           ))}
         </div>
@@ -70,7 +71,7 @@ export default function HeaderCard({
             onChange={(event) => onPointFilterChange(event.target.value)}
             className="header_btn-point flex-1 px-3 py-2 md:mx-0 flex-shrink-0 md:px-4 md:py-2 bg-white rounded-xl border border-slate-300 text-sm font-semibold outline-none cursor-pointer"
           >
-            {POINT_OPTIONS.map((option) => (
+            {pointOptions.map((option) => (
               <option key={option.value} value={option.value}>{option.label}</option>
             ))}
           </select>
@@ -80,7 +81,7 @@ export default function HeaderCard({
             onChange={(event) => onRankFilterChange(event.target.value)}
             className="header_btn-rank flex-1 px-3 py-2 md:px-4 md:py-2 md:mx-1 bg-white rounded-xl border border-slate-300 text-sm font-semibold outline-none cursor-pointer"
           >
-            <option value="0">Tất cả rank</option>
+            <option value="0">{translate(uiLanguage, 'allRanks')}</option>
             {rankOptions.map((rank) => {
               if (rank === '0') return null;
               return <option key={rank} value={rank}>{rank}</option>;
@@ -95,7 +96,7 @@ export default function HeaderCard({
           className="header_btn-prev flex items-center justify-center gap-2 px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-blue-100 active:scale-95 border border-slate-200 cursor-pointer!"
           onClick={() => onNavigate(-1)}
         >
-          <span>Lùi</span>
+          <span>{translate(uiLanguage, 'previous')}</span>
         </button>
 
         <label className="flex items-center justify-center gap-2 h-10 px-3 bg-white rounded-xl shadow cursor-pointer select-none hover:bg-blue-100 border border-slate-200">
@@ -105,7 +106,7 @@ export default function HeaderCard({
             onChange={(event) => onRandomChange(event.target.checked)}
             className="header_checkbox_random w-5 h-5 accent-purple-500 cursor-pointer shrink-0"
           />
-          <span className="text-sm font-semibold leading-none">Ngẫu nhiên</span>
+          <span className="text-sm font-semibold leading-none">{translate(uiLanguage, 'random')}</span>
         </label>
 
         <button
@@ -113,7 +114,7 @@ export default function HeaderCard({
           className="header_btn-next flex items-center justify-center gap-2 px-5 py-2 bg-white rounded-xl shadow text-sm font-semibold hover:bg-blue-100 active:scale-95 border border-slate-200 cursor-pointer"
           onClick={() => onNavigate(1)}
         >
-          <span>Tiến</span>
+          <span>{translate(uiLanguage, 'next')}</span>
         </button>
       </div>
     </header>

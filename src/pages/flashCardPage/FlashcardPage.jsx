@@ -3,8 +3,7 @@ import Loading from '../../components/Loading.jsx';
 import HeaderCard, { getRankOptions } from '../../components/HeaderCard.jsx';
 import CardComponent from './CardComponent.jsx';
 import { readGameSettings, saveGameSettings } from '../../utils/gameSettings.js';
-
-import { Link } from 'react-router-dom';
+import { translate, useAppLanguage } from '../../utils/appLanguage.js';
 
 const SETTINGS_KEY = 'flashcardSettings';
 
@@ -70,6 +69,7 @@ function getFieldValue(item, field) {
 }
 
 export default function FlashcardPage() {
+  const appLanguage = useAppLanguage();
   const [dataMapped, setDataMapped] = useState([]);
   const [savedSettings] = useState(() => readGameSettings(SETTINGS_KEY));
   const [selectedLanguage, setSelectedLanguage] = useState('chinese');
@@ -232,19 +232,19 @@ export default function FlashcardPage() {
   };
 
   const showAllText = () => {
-    if (!currentItem) return 'Trống-None-无内容';
+    if (!currentItem) return translate(appLanguage, 'empty');
     const classifier = currentItem.classifier && currentItem.classifier.trim() !== '-' && currentItem.classifier.trim() !== '—'
       ? currentItem.classifier
-      : 'Trống-None-无内容';
+      : translate(appLanguage, 'empty');
     const classPinin = currentItem.classPinin && currentItem.classPinin.trim() !== '-' && currentItem.classPinin.trim() !== '—'
       ? currentItem.classPinin
-      : 'Trống-None-无内容';
+      : translate(appLanguage, 'empty');
     const category = currentItem.category && currentItem.category.trim() !== '-' && currentItem.category.trim() !== '—'
       ? currentItem.category
-      : 'Trống-None-无内容';
+      : translate(appLanguage, 'empty');
     const rank = currentItem.rank && currentItem.rank.toString().trim() !== '-' && currentItem.rank.toString().trim() !== '—'
       ? currentItem.rank
-      : 'Trống-None-无内容';
+      : translate(appLanguage, 'empty');
     return `${classifier} | ${classPinin} | ${category} | ${rank}`;
   };
 
@@ -270,13 +270,13 @@ export default function FlashcardPage() {
           onTouchEnd={handleTouchEnd}
         >
           {loading ? (
-            <Loading text="Đang tải chữ tầu, vui lòng đợi tí..." />
+            <Loading text={translate(appLanguage, 'loadingCards')} />
           ) : (
             <>
               <CardComponent
                 className="py-6"
                 textClassName="body_block-main_show text-5xl sm:text-5xl md:text-3xl font-semibold text-slate-700 select-text"
-                text={currentItem ? getFieldValue(currentItem, currentConfig.main) : 'No data'}
+                text={currentItem ? getFieldValue(currentItem, currentConfig.main) : translate(appLanguage, 'noData')}
                 onClick={handleContentToggle}
               />
 
@@ -304,7 +304,7 @@ export default function FlashcardPage() {
               <CardComponent
                 className="py-4 px-6"
                 textClassName="body_block-example text-3xl sm:text-2xl md:text-base italic text-slate-600"
-                text={currentItem ? (isShown ? currentItem.example || 'Trống-None-无内容' : '****') : 'No data'}
+                text={currentItem ? (isShown ? currentItem.example || translate(appLanguage, 'empty') : '****') : translate(appLanguage, 'noData')}
                 onClick={handleContentToggle}
               />
 
@@ -318,9 +318,6 @@ export default function FlashcardPage() {
           )}
         </main>
 
-        <div className="mt-6 text-center">
-          <Link to="/" className="inline-block text-sm text-slate-500 hover:underline">← Về trang chủ</Link>
-        </div>
       </div>
     </div>
   );

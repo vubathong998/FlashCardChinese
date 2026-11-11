@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import CardComponent from '../flashCardPage/CardComponent.jsx';
 import HeaderCard, { getRankOptions } from '../../components/HeaderCard.jsx';
 import Loading from '../../components/Loading.jsx';
 import { readGameSettings, saveGameSettings } from '../../utils/gameSettings.js';
+import { translate, useAppLanguage } from '../../utils/appLanguage.js';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1C_JtpNZzgy0iFdmt8oPAunVPQnihENhSIsD2L7H2Wd0/export?format=csv';
 const SETTINGS_KEY = 'multipleChoiceGameSettings';
@@ -100,6 +100,7 @@ function getMetadata(item) {
 }
 
 export default function MultipleChoiceGame() {
+    const appLanguage = useAppLanguage();
     const [data, setData] = useState([]);
     const [savedSettings] = useState(() => readGameSettings(SETTINGS_KEY));
     const [selectedLanguage, setSelectedLanguage] = useState('chinese');
@@ -135,7 +136,7 @@ export default function MultipleChoiceGame() {
             .catch((error) => {
                 if (error.name === 'AbortError') return;
                 console.error('Sheet error:', error);
-                setLoadError('Không thể tải dữ liệu từ Google Sheet. Vui lòng thử tải lại trang.');
+                setLoadError(translate(appLanguage, 'loadingError'));
                 setLoading(false);
             });
 
@@ -238,12 +239,12 @@ export default function MultipleChoiceGame() {
     const isRevealed = answerStatus === 'correct' || answerStatus === 'revealed';
     const details = currentItem
         ? [
-            [getLanguageLabel(config.prompt), getFieldValue(currentItem, config.prompt)],
-            [getLanguageLabel(config.first), getFieldValue(currentItem, config.first)],
-            [getLanguageLabel(config.second), getFieldValue(currentItem, config.second)],
-            [getLanguageLabel(config.third), getFieldValue(currentItem, config.third)],
-            ['Ví dụ', currentItem.example],
-            ['Thông tin', getMetadata(currentItem)]
+            [getLanguageLabel(config.prompt, appLanguage), getFieldValue(currentItem, config.prompt)],
+            [getLanguageLabel(config.first, appLanguage), getFieldValue(currentItem, config.first)],
+            [getLanguageLabel(config.second, appLanguage), getFieldValue(currentItem, config.second)],
+            [getLanguageLabel(config.third, appLanguage), getFieldValue(currentItem, config.third)],
+            [translate(appLanguage, 'example'), currentItem.example],
+            [translate(appLanguage, 'metadata'), getMetadata(currentItem)]
         ]
         : [];
 
@@ -270,7 +271,7 @@ export default function MultipleChoiceGame() {
 
                 <main className="space-y-4 max-w-4xl mx-auto">
                     {loading ? (
-                        <Loading text="Đang tải dữ liệu, vui lòng đợi..." />
+                        <Loading text={translate(appLanguage, 'loading')} />
                     ) : loadError ? (
                         <div role="alert" className="rounded-2xl border border-red-300 bg-white p-6 text-center text-red-700">
                             {loadError}
@@ -284,7 +285,7 @@ export default function MultipleChoiceGame() {
                             />
 
                             {!isRevealed && (
-                                <div role="group" aria-label="Chọn đáp án" className="grid gap-3">
+                                <div role="group" aria-label={translate(appLanguage, 'chooseAnswer')} className="grid gap-3">
                                     {choices.map((choice, index) => (
                                         <button
                                             key={`${choice.id}-${index}`}
@@ -319,11 +320,11 @@ export default function MultipleChoiceGame() {
                                 }`}
                             >
                                 {answerStatus === 'incorrect'
-                                    ? 'Chưa đúng, hãy thử lại.'
+                                    ? translate(appLanguage, 'incorrect')
                                     : answerStatus === 'correct'
-                                        ? 'Chính xác!'
+                                        ? translate(appLanguage, 'correct')
                                         : answerStatus === 'revealed'
-                                            ? 'Đã hiển thị đáp án.'
+                                            ? translate(appLanguage, 'revealed')
                                             : ' '}
                             </p>
 
@@ -333,7 +334,7 @@ export default function MultipleChoiceGame() {
                                     onClick={revealAnswer}
                                     className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 shadow transition hover:bg-slate-100 active:scale-95"
                                 >
-                                    Không biết
+                                    {translate(appLanguage, 'dontKnowAnswer')}
                                 </button>
                                 <button
                                     type="button"
@@ -341,12 +342,14 @@ export default function MultipleChoiceGame() {
                                     disabled={!isRevealed && selectedChoice === null}
                                     className="rounded-xl bg-purple-500 px-8 py-3 font-semibold text-white shadow transition hover:bg-purple-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    {isRevealed ? 'Tiếp tục' : 'Kiểm tra'}
+                                    {isRevealed
+                                        ? translate(appLanguage, 'continue')
+                                        : translate(appLanguage, 'check')}
                                 </button>
                             </div>
 
                             {isRevealed && (
-                                <section aria-label="Thông tin từ vựng" className="space-y-3">
+                                <section aria-label={translate(appLanguage, 'details')} className="space-y-3">
                                     {details.map(([label, value]) => (
                                         <CardComponent
                                             key={label}
@@ -360,24 +363,16 @@ export default function MultipleChoiceGame() {
                         </>
                     ) : (
                         <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-600">
-                            Không có đủ từ cùng rank để tạo 4 đáp án phù hợp với bộ lọc đã chọn.
+                            {translate(appLanguage, 'insufficientChoices')}
                         </div>
                     )}
                 </main>
 
-                <div className="mt-6 text-center">
-                    <Link to="/" className="inline-block text-sm text-slate-500 hover:underline">← Về trang chủ</Link>
-                </div>
             </div>
         </div>
     );
 }
 
-function getLanguageLabel(field) {
-    return {
-        chinese: 'Tiếng Trung',
-        vietnamese: 'Tiếng Việt',
-        english: 'Tiếng Anh',
-        pinyin: 'Pinyin'
-    }[field];
+function getLanguageLabel(field, language) {
+    return translate(language, field);
 }
