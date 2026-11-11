@@ -149,9 +149,18 @@ export default function FlashcardPage() {
         navigate(1);
       }
     };
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+      setIsShown((prev) => !prev);
+    };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      console.log('Removing event listeners');
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('contextmenu', handleContextMenu);
+    }
   }, [dataFiltered.length, currentPos]);
 
   useEffect(() => {

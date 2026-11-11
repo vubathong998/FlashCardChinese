@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <!-- Hiệu ứng chuyển màu cho nền Xanh Đen Navy -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A1128" />
+      <stop offset="50%" stop-color="#101F42" />
+      <stop offset="100%" stop-color="#070C1B" />
+    </linearGradient>
+
+    <!-- Hiệu ứng chuyển màu cho Ngôi sao đỏ rực -->
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4D4D" />
+      <stop offset="50%" stop-color="#E60000" />
+      <stop offset="100%" stop-color="#990000" />
+    </linearGradient>
+
+    <!-- Hiệu ứng chuyển màu cho Tâm tròn ở giữa -->
+    <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="30%" stop-color="#FF8F00" />
+      <stop offset="70%" stop-color="#FF1E1E" />
+      <stop offset="100%" stop-color="#990000" />
+    </radialGradient>
+
+    <!-- Hiệu ứng phát sáng mờ (Glow) cho viền trắng -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Nền Square-bo góc (Squircle) tối sẫm hiện đại -->
+  <rect width="100" height="100" rx="22" fill="url(#bgGrad)" />
+
+  <!-- Bụi sáng/Tia sáng nhỏ nền (Background Flare) góc 45 độ -->
+  <g opacity="0.3" stroke="#FFA3A3" stroke-width="1" stroke-linecap="round">
+    <line x1="25" y1="25" x2="75" y2="75" />
+    <line x1="75" y1="25" x2="25" y2="75" />
+    <circle cx="28" cy="42" r="0.8" fill="#FFF" opacity="0.6" />
+    <circle cx="74" cy="35" r="1" fill="#FFF" opacity="0.8" />
+    <circle cx="35" cy="78" r="0.7" fill="#FFF" opacity="0.5" />
+    <circle cx="68" cy="68" r="1.2" fill="#FFF" opacity="0.7" />
+  </g>
+
+  <!-- 1. Viền sáng phát quang (Outer White Glow Layer) của ngôi sao -->
+  <path d="M 50 1 C 50 44, 44 50, 1 50 C 44 50, 50 56, 50 99 C 50 56, 56 50, 99 50 C 56 50, 50 44, 50 1 Z" fill="none" stroke="#FFFFFF" stroke-width="2.5" filter="url(#glow)" />
+
+  <!-- 2. Thân ngôi sao 4 cánh đỏ rực rỡ, ôm trọn viền -->
+  <path d="M 50 2 C 50 44, 44 50, 2 50 C 44 50, 50 56, 50 98 C 50 56, 56 50, 98 50 C 56 50, 50 44, 50 2 Z" fill="url(#starGrad)" />
+
+  <!-- 3. Gờ bóng 3D của ngôi sao (Tạo khối cánh) -->
+  <path d="M 50 2 C 50 44, 44 50, 50 50 Z M 50 98 C 50 56, 56 50, 50 50 Z" fill="#FFFFFF" opacity="0.15" />
+
+  <!-- 4. Lõi tròn phát sáng ở giữa (Core) -->
+  <circle cx="50" cy="50" r="12" fill="url(#coreGrad)" stroke="#FFCCCC" stroke-width="1" />
+  
+  <!-- Điểm nhấn sáng nhỏ trong lõi (Highlight) -->
+  <circle cx="47" cy="47" r="2.5" fill="#FFFFFF" opacity="0.9" filter="url(#glow)" />
+</svg>
