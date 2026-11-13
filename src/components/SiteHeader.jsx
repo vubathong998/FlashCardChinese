@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { translate, useAppLanguage } from '../utils/appLanguage.js';
 
 const LANGUAGES = [
@@ -55,9 +55,14 @@ export default function SiteHeader({ localeCode, onLanguageChange }) {
         >
           <nav className="site-header__nav" aria-label="Điều hướng chính">
             {navItems.map((item) => (
-              <Link key={item.path} to={localizedPath(item.path)}>
+              <NavLink
+                key={item.path}
+                to={localizedPath(item.path)}
+                end={item.path === '/'}
+                className={({ isActive }) => isActive ? 'site-header__nav-link--active' : undefined}
+              >
                 {item.label}
-              </Link>
+              </NavLink>
             ))}
           </nav>
 

@@ -4,6 +4,7 @@ import HeaderCard, { getRankOptions } from '../../components/HeaderCard.jsx';
 import CardComponent from './CardComponent.jsx';
 import { readGameSettings, saveGameSettings } from '../../utils/gameSettings.js';
 import { translate, useAppLanguage } from '../../utils/appLanguage.js';
+import { getSheetCsv } from '../../utils/sheetData.js';
 
 const SETTINGS_KEY = 'flashcardSettings';
 
@@ -83,8 +84,9 @@ export default function FlashcardPage() {
   const suppressClickUntilRef = useRef(0);
 
   useEffect(() => {
-    fetch('https://docs.google.com/spreadsheets/d/1C_JtpNZzgy0iFdmt8oPAunVPQnihENhSIsD2L7H2Wd0/export?format=csv')
-      .then((res) => res.text())
+    let isActive = true;
+
+    getSheetCsv()
       .then((csv) => {
         const rows = csv.trim().split('\n').map((row) => row.split(','));
         const [, ...data] = rows;
@@ -93,14 +95,20 @@ export default function FlashcardPage() {
 
         const validSavedRank = ranks.includes(String(savedSettings.rank)) ? savedSettings.rank : '0';
 
+        if (!isActive) return;
         setDataMapped(mapped);
         setRankFilter(validSavedRank);
         setLoading(false);
       })
       .catch((error) => {
         console.error('Sheet error:', error);
+        if (!isActive) return;
         setLoading(false);
       });
+
+    return () => {
+      isActive = false;
+    };
   }, [savedSettings]);
 
   useEffect(() => {
