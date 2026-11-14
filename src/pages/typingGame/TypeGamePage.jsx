@@ -67,6 +67,11 @@ function getDisplayValue(value) {
         : 'Trống-None-无内容';
 }
 
+function maskChineseInExample(example, chinese) {
+    if (!example || !chinese) return example;
+    return example.split(chinese).join('***');
+}
+
 export default function TypeGamePage() {
     const appLanguage = useAppLanguage();
     const [data, setData] = useState([]);
@@ -226,7 +231,7 @@ export default function TypeGamePage() {
                             <CardComponent
                                 className="px-5 py-3"
                                 textClassName="text-base sm:text-lg italic text-slate-500"
-                                text={`${translate(appLanguage, 'example')}: ${getDisplayValue(currentItem.example)}`}
+                                text={`${translate(appLanguage, 'example')}: ${getDisplayValue(maskChineseInExample(currentItem.example, currentItem.chinese))}`}
                             />
 
                             <form className="space-y-3" onSubmit={handleSubmit}>

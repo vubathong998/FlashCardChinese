@@ -3,7 +3,7 @@ import FlashcardPage from './pages/flashCardPage/FlashcardPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import TypeGamePage from './pages/typingGame/TypeGamePage.jsx';
 import MultipleChoiceGame from './pages/multipleChoiceGame/MultipleChoiceGame.jsx';
-import CvOnlineRoute from './pages/CvOnlineRoute.jsx';
+import CvOnlineRoute from './pages/cvOnlinePage/CvOnlineRoute.jsx';
 import SiteHeader from './components/SiteHeader.jsx';
 import { AppLanguageContext } from './utils/appLanguage.js';
 import './App.css';

@@ -1,4 +1,4 @@
-import CvOnlineTemplate from '../components/CvOnlineTemplate.jsx';
+import CvOnlineTemplate from '../../components/CvOnlineTemplate.jsx';
 
 const sections = [
   {
