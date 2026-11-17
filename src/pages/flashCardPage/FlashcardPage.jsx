@@ -80,13 +80,14 @@ export default function FlashcardPage() {
   const [currentPos, setCurrentPos] = useState(0);
   const [isShown, setIsShown] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [reloadCount, setReloadCount] = useState(0);
   const touchStartRef = useRef(null);
   const suppressClickUntilRef = useRef(0);
 
   useEffect(() => {
     let isActive = true;
 
-    getSheetCsv()
+    getSheetCsv({ forceRefresh: reloadCount > 0 })
       .then((csv) => {
         const rows = csv.trim().split('\n').map((row) => row.split(','));
         const [, ...data] = rows;
@@ -98,6 +99,7 @@ export default function FlashcardPage() {
         if (!isActive) return;
         setDataMapped(mapped);
         setRankFilter(validSavedRank);
+        setCurrentPos(0);
         setLoading(false);
       })
       .catch((error) => {
@@ -109,7 +111,7 @@ export default function FlashcardPage() {
     return () => {
       isActive = false;
     };
-  }, [savedSettings]);
+  }, [savedSettings, reloadCount]);
 
   useEffect(() => {
     saveGameSettings(SETTINGS_KEY, { rank: rankFilter, point: pointFilter, random: isRandom });
@@ -270,6 +272,10 @@ export default function FlashcardPage() {
           isRandom={isRandom}
           onRandomChange={setIsRandom}
           onNavigate={navigate}
+          onReloadData={() => {
+            setLoading(true);
+            setReloadCount((count) => count + 1);
+          }}
         />
 
         <main

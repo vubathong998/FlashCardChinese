@@ -37,12 +37,20 @@ function saveCsvToCache(csv) {
     }
 }
 
-export function getSheetCsv() {
-    const cachedCsv = readCachedCsv();
-    if (cachedCsv) return Promise.resolve(cachedCsv);
-    if (pendingRequest) return pendingRequest;
+export function getSheetCsv({ forceRefresh = false } = {}) {
+    if (forceRefresh) {
+        try {
+            localStorage.removeItem(CACHE_KEY);
+        } catch (error) {
+            console.warn('Unable to clear Google Sheet cache:', error);
+        }
+    } else {
+        const cachedCsv = readCachedCsv();
+        if (cachedCsv) return Promise.resolve(cachedCsv);
+        if (pendingRequest) return pendingRequest;
+    }
 
-    pendingRequest = fetch(SHEET_URL)
+    const request = fetch(SHEET_URL, forceRefresh ? { cache: 'no-store' } : undefined)
         .then((response) => {
             if (!response.ok) {
                 throw new Error(`Google Sheet request failed: ${response.status}`);
@@ -57,8 +65,11 @@ export function getSheetCsv() {
             return csv;
         })
         .finally(() => {
-            pendingRequest = null;
+            if (pendingRequest === request) {
+                pendingRequest = null;
+            }
         });
 
-    return pendingRequest;
+    pendingRequest = request;
+    return request;
 }
