@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Loading from '../../components/Loading.jsx';
 import HeaderCard, { getRankOptions } from '../../components/HeaderCard.jsx';
 import CardComponent from './CardComponent.jsx';
@@ -83,6 +83,8 @@ export default function FlashcardPage() {
   const [reloadCount, setReloadCount] = useState(0);
   const touchStartRef = useRef(null);
   const suppressClickUntilRef = useRef(0);
+  const navigateRef = useRef(null);
+  const toggleVisibilityRef = useRef(null);
 
   useEffect(() => {
     let isActive = true;
@@ -143,60 +145,64 @@ export default function FlashcardPage() {
     setCurrentPos((prev) => Math.min(prev, dataFiltered.length - 1));
   }, [dataFiltered.length]);
 
+  const navigate = useCallback((delta) => {
+    const itemCount = dataFiltered.length;
+    if (itemCount === 0) return;
+
+    setCurrentPos((position) => {
+      const nextPos = position + delta;
+      if (nextPos < 0) return itemCount - 1;
+      if (nextPos >= itemCount) return 0;
+      return nextPos;
+    });
+    setIsShown(false);
+  }, [dataFiltered.length]);
+
+  const toggleVisibility = useCallback(() => {
+    setIsShown((prev) => !prev);
+  }, []);
+
+  useLayoutEffect(() => {
+    navigateRef.current = navigate;
+    toggleVisibilityRef.current = toggleVisibility;
+  }, [navigate, toggleVisibility]);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape' || event.code === 'ArrowUp' || event.code === 'ArrowDown' || event.key === 'f' || event.key === 'F') {
-        setIsShown((prev) => !prev);
+        toggleVisibilityRef.current();
       }
 
       if ((event.ctrlKey && event.code === 'Space') || event.key === 'ArrowLeft') {
         event.preventDefault();
-        navigate(-1);
-      }
-
-      if (event.key === ' ' || event.code === 'Space' || event.key === 'ArrowRight') {
+        navigateRef.current(-1);
+      } else if (event.key === ' ' || event.code === 'Space' || event.key === 'ArrowRight') {
         event.preventDefault();
-        navigate(1);
+        navigateRef.current(1);
       }
     };
     const handleContextMenu = (event) => {
       event.preventDefault();
-      setIsShown((prev) => !prev);
+      toggleVisibilityRef.current();
+    };
+    const handleWheel = (event) => {
+      if (event.deltaY < 0) {
+        navigateRef.current(-1);
+      } else if (event.deltaY > 0) {
+        navigateRef.current(1);
+      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('contextmenu', handleContextMenu);
-    return () => {
-      console.log('Removing event listeners');
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('contextmenu', handleContextMenu);
-    }
-  }, [dataFiltered.length, currentPos]);
-
-  useEffect(() => {
-    const handleWheel = (event) => {
-      if (event.deltaY < 0) {
-        navigate(-1);
-      } else if (event.deltaY > 0) {
-        navigate(1);
-      }
-    };
-
     window.addEventListener('wheel', handleWheel, { passive: true });
 
     return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('contextmenu', handleContextMenu);
       window.removeEventListener('wheel', handleWheel);
     };
-  }, [dataFiltered.length, currentPos]);
-
-  const navigate = (delta) => {
-    if (dataFiltered.length === 0) return;
-    let nextPos = currentPos + delta;
-    if (nextPos < 0) nextPos = dataFiltered.length - 1;
-    if (nextPos >= dataFiltered.length) nextPos = 0;
-    setCurrentPos(nextPos);
-    setIsShown(false);
-  };
+  }, []);
 
   const currentItem = dataFiltered[currentPos] ?? null;
   const currentConfig = LANGUAGE_CONFIG[selectedLanguage];
