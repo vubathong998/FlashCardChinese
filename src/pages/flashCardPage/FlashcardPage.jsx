@@ -265,7 +265,7 @@ export default function FlashcardPage() {
   };
 
   return (
-    <div className="soft-bg-page min-h-screen flex justify-center p-4 md:p-6">
+    <div className="soft-bg-page flashcard-page flex justify-center p-4 md:p-6">
       <div className="w-full max-w-5xl">
         <HeaderCard
           data={dataMapped}
@@ -328,15 +328,15 @@ export default function FlashcardPage() {
                 onClick={handleContentToggle}
               />
 
-              <CardComponent
-                className="py-4 px-6"
-                textClassName="body_block-showAll text-3xl sm:text-2xl md:text-base italic text-slate-600"
-                text={currentItem ? (isShown ? showAllText() : '****') : 'No data'}
-                onClick={handleContentToggle}
-              />
             </>
           )}
         </main>
+        {/* <CardComponent
+            className="py-4 px-6"
+            textClassName="body_block-showAll text-3xl sm:text-2xl md:text-base italic text-slate-600"
+            text={currentItem ? (isShown ? showAllText() : '****') : 'No data'}
+            onClick={handleContentToggle}
+          /> */}
 
       </div>
     </div>

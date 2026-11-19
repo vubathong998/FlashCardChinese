@@ -4,6 +4,11 @@
   background-color: #eef7ff;
 }
 
+.flashcard-page {
+  min-height: calc(100vh - 77px);
+  min-height: calc(100dvh - 77px);
+}
+
 .soft-bg-animate {
   transition: all 0.2s ease;
 }
@@ -121,6 +126,11 @@
 }
 
 @media (max-width: 768px) {
+  .flashcard-page {
+    min-height: calc(100vh - 69px);
+    min-height: calc(100dvh - 69px);
+  }
+
   .soft-bg-animate {
     border-radius: 1rem;
   }
