@@ -1,6 +1,6 @@
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1C_JtpNZzgy0iFdmt8oPAunVPQnihENhSIsD2L7H2Wd0/export?format=csv';
 const CACHE_KEY = 'vocabularySheetCsvCache';
-const CACHE_DURATION_MS = 12 * 60 * 60 * 1000;
+const CACHE_DURATION_MS = 15 * 24 * 60 * 60 * 1000;
 
 let pendingRequest = null;
 

@@ -61,12 +61,6 @@ function shuffle(items) {
     return result;
 }
 
-function getDisplayValue(value) {
-    return value && value.trim() !== '-' && value.trim() !== '—'
-        ? value
-        : 'Trống-None-无内容';
-}
-
 function maskChineseInExample(example, chinese) {
     if (!example || !chinese) return example;
     return example.split(chinese).join('***');
@@ -225,13 +219,14 @@ export default function TypeGamePage() {
                             <CardComponent
                                 className="py-6 px-6"
                                 textClassName="text-4xl sm:text-5xl font-semibold text-slate-700"
-                                text={getPrompt(currentItem, selectedLanguage) || translate(appLanguage, 'empty')}
+                                text={getPrompt(currentItem, selectedLanguage)}
                             />
 
                             <CardComponent
                                 className="px-5 py-3"
                                 textClassName="text-base sm:text-lg italic text-slate-500"
-                                text={`${translate(appLanguage, 'example')}: ${getDisplayValue(maskChineseInExample(currentItem.example, currentItem.chinese))}`}
+                                label={translate(appLanguage, 'example')}
+                                text={maskChineseInExample(currentItem.example, currentItem.chinese)}
                             />
 
                             <form className="space-y-3" onSubmit={handleSubmit}>
@@ -300,7 +295,8 @@ export default function TypeGamePage() {
                                             key={label}
                                             className="px-5 py-4"
                                             textClassName="text-lg text-slate-700"
-                                            text={`${label}: ${getDisplayValue(value)}`}
+                                            label={label}
+                                            text={value}
                                         />
                                     ))}
                                 </section>

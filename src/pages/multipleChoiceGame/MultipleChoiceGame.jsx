@@ -52,12 +52,6 @@ function getFieldValue(item, field) {
     return item[field] || '';
 }
 
-function getDisplayValue(value) {
-    return value && value.trim() !== '-' && value.trim() !== '—'
-        ? value
-        : 'Trống-None-无内容';
-}
-
 function shuffle(items) {
     const result = [...items];
     for (let index = result.length - 1; index > 0; index -= 1) {
@@ -95,7 +89,7 @@ function getChoices(item, data, answerField) {
 
 function getMetadata(item) {
     return [item.classifier, item.classPinin, item.category, item.rank]
-        .map(getDisplayValue)
+        .filter((value) => value && value.trim() !== '-' && value.trim() !== '—')
         .join(' | ');
 }
 
@@ -352,7 +346,8 @@ export default function MultipleChoiceGame() {
                                             key={label}
                                             className="px-5 py-4"
                                             textClassName="text-lg text-slate-700"
-                                            text={`${label}: ${getDisplayValue(value)}`}
+                                            label={label}
+                                            text={value}
                                         />
                                     ))}
                                 </section>

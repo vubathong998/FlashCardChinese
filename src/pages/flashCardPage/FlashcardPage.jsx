@@ -208,7 +208,8 @@ export default function FlashcardPage() {
   const currentConfig = LANGUAGE_CONFIG[selectedLanguage];
 
   const renderValue = (fieldKey) => {
-    if (!currentItem) return 'No data';
+    if (!currentItem) return '';
+    if (!currentItem[fieldKey]?.trim()) return '';
     if (!isShown) return '****';
     return getFieldValue(currentItem, fieldKey);
   };
@@ -247,22 +248,32 @@ export default function FlashcardPage() {
     navigate(dx < 0 ? 1 : -1);
   };
 
-  const showAllText = () => {
+  const getExampleText = (() => {
+    const isEmptyText = (text) => !text || text.trim() === '-' || text.trim() === '—';
+
     if (!currentItem) return translate(appLanguage, 'empty');
-    const classifier = currentItem.classifier && currentItem.classifier.trim() !== '-' && currentItem.classifier.trim() !== '—'
-      ? currentItem.classifier
-      : translate(appLanguage, 'empty');
-    const classPinin = currentItem.classPinin && currentItem.classPinin.trim() !== '-' && currentItem.classPinin.trim() !== '—'
-      ? currentItem.classPinin
-      : translate(appLanguage, 'empty');
-    const category = currentItem.category && currentItem.category.trim() !== '-' && currentItem.category.trim() !== '—'
-      ? currentItem.category
-      : translate(appLanguage, 'empty');
-    const rank = currentItem.rank && currentItem.rank.toString().trim() !== '-' && currentItem.rank.toString().trim() !== '—'
-      ? currentItem.rank
-      : translate(appLanguage, 'empty');
-    return `${classifier} | ${classPinin} | ${category} | ${rank}`;
-  };
+    if (isEmptyText(currentItem.example)) return '';
+    if (!isShown) return '****';
+    return currentItem.example;
+  })
+
+
+  // const showAllText = () => {
+  //   if (!currentItem) return translate(appLanguage, 'empty');
+  //   const classifier = currentItem.classifier && currentItem.classifier.trim() !== '-' && currentItem.classifier.trim() !== '—'
+  //     ? currentItem.classifier
+  //     : translate(appLanguage, 'empty');
+  //   const classPinin = currentItem.classPinin && currentItem.classPinin.trim() !== '-' && currentItem.classPinin.trim() !== '—'
+  //     ? currentItem.classPinin
+  //     : translate(appLanguage, 'empty');
+  //   const category = currentItem.category && currentItem.category.trim() !== '-' && currentItem.category.trim() !== '—'
+  //     ? currentItem.category
+  //     : translate(appLanguage, 'empty');
+  //   const rank = currentItem.rank && currentItem.rank.toString().trim() !== '-' && currentItem.rank.toString().trim() !== '—'
+  //     ? currentItem.rank
+  //     : translate(appLanguage, 'empty');
+  //   return `${classifier} | ${classPinin} | ${category} | ${rank}`;
+  // };
 
   return (
     <div className="soft-bg-page flashcard-page flex justify-center p-4 md:p-6">
@@ -324,7 +335,7 @@ export default function FlashcardPage() {
               <CardComponent
                 className="py-4 px-6"
                 textClassName="body_block-example text-3xl sm:text-2xl md:text-base italic text-slate-600"
-                text={currentItem ? (isShown ? currentItem.example || translate(appLanguage, 'empty') : '****') : translate(appLanguage, 'noData')}
+                text={getExampleText()}
                 onClick={handleContentToggle}
               />
 
